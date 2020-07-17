@@ -17,9 +17,16 @@ class Parser {
     ("i", Identity, 0),
     ("nil", Nil, 0),
     ("cons", Cons0, 0),
+    ("vec", Cons0, 0),
     ("car", Car, 0),
     ("cdr", Cdr, 0),
     ("isnil", IsNil, 0),
+    ("draw", Draw, 0),
+    ("multipledraw", MultiDraw, 0),
+    ("checkerboard", Checkerboard0, 0),
+    ("send", Send, 0),
+    ("if0", IfZero0, 0),
+    ("interact", Interact0, 0),
   )
 
   def parseBinary(data: List[Int]): Expression = ???

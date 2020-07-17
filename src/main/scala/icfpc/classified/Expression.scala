@@ -63,5 +63,20 @@ case object Cdr extends Ast with Op
 
 case object IsNil extends Ast with Op
 
+case object Draw extends Ast with Op
+case object MultiDraw extends Ast with Op
+
+case object Checkerboard0 extends Ast with Op
+case class Checkerboard1(width: Expression) extends Op
+
+case object Send extends Ast with Op
+
+case object IfZero0 extends Ast with Op
+case class IfZero1(cond: Expression) extends Op
+case class IfZero2(cond: Expression, left: Expression) extends Op
+
+case object Interact0 extends Ast with Op
+case class Interact1(protocol: Expression) extends Ast with Op
+case class Interact2(protocol: Expression, state: Expression) extends Ast with Op
 
 case class Function(id: Int, expr: Expression) extends Ast

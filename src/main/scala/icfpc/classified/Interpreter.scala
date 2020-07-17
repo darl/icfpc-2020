@@ -46,7 +46,6 @@ object Interpreter {
       case Div1(left) => ???
       case Inc0 => ???
       case Dec0 => ???
-      case Function(id, expr) => ???
     }
   }
 }
