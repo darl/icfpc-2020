@@ -2,6 +2,7 @@ package icfpc.classified
 
 sealed trait Expression
 sealed trait Ast extends Expression
+
 sealed trait Op extends Expression
 
 case class Apply(op: Expression, arg: Expression) extends Expression with Ast {
@@ -14,11 +15,13 @@ case class UnknownVariable(value: Long) extends Op with Ast
 case object Nil extends Expression with Ast with Op
 
 case object Cons0 extends Expression with Ast with Op
-case class Cons1(head: Expression) extends Op
+case class Cons1(tail: Expression) extends Op
 case class Cons(head: Expression, tail: Expression) extends Op
 
 case object False0 extends Expression with Ast with Op
+case object False extends Expression with Op
 case object True0 extends Expression with Ast with Op
+case class True(value: Expression) extends Op
 
 case object Sum0 extends Expression with Ast with Op
 case class Sum1(left: Literal) extends Op
