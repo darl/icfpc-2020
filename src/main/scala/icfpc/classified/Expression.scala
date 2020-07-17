@@ -14,10 +14,15 @@ case object False extends Expression
 case object True extends Expression
 
 case object Sum0 extends Expression
-case class Sum1(left: Expression) extends Expression
+case class Sum1(left: Expression) extends Expression // = Apply(Sum0, left)
 
 case object Product0 extends Expression
 case class Product1(left: Expression) extends Expression
+
+case object Negate extends Expression
+
+case object Div0 extends Expression
+case class Div1(left: Expression) extends Expression
 
 //successor
 case object Succ extends Expression
