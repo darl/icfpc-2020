@@ -14,8 +14,10 @@ case object False extends Expression
 case object True extends Expression
 
 case object Sum0 extends Expression
-
 case class Sum1(left: Expression) extends Expression
+
+case object Product0 extends Expression
+case class Product1(left: Expression) extends Expression
 
 //successor
 case object Succ extends Expression
