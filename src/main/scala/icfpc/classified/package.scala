@@ -1,5 +1,5 @@
 package icfpc
 
 package object classified {
-  implicit def literal(value: Int): Variable = Variable(value)
+  implicit def literal(value: Int): Literal = Literal(value)
 }
