@@ -33,8 +33,8 @@ object Interpreter {
       case Cons0 => ???
       case Cons1(head) => ???
       case Cons(head, tail) => ???
-      case False => ???
-      case True => ???
+      case False0 => ???
+      case True0 => ???
       case Sum0 => Sum1.apply
       case Sum1(left) => arg => Literal(left.value + arg.value)
       case Product0 => ???

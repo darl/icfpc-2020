@@ -15,8 +15,8 @@ case object Cons0 extends Expression with Ast with Op
 case class Cons1(head: Expression) extends Op
 case class Cons(head: Expression, tail: Expression) extends Op
 
-case object False extends Expression with Ast with Op
-case object True extends Expression with Ast with Op
+case object False0 extends Expression with Ast with Op
+case object True0 extends Expression with Ast with Op
 
 case object Sum0 extends Expression with Ast with Op
 case class Sum1(left: Literal) extends Op

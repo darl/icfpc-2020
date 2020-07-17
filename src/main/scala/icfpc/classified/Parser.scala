@@ -15,6 +15,8 @@ class Parser {
     ("b", BComb0, 0),
     ("pwr2", Power2, 0),
     ("i", Identity, 0),
+    ("t", True0, 0),
+    ("f", False0, 0),
     ("nil", Nil, 0),
     ("cons", Cons0, 0),
     ("vec", Cons0, 0),
