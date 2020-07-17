@@ -4,10 +4,12 @@ sealed trait Expression
 sealed trait Ast extends Expression
 sealed trait Op extends Expression
 
-case class Apply(op: Expression, arg: Expression) extends Expression with Ast
+case class Apply(op: Expression, arg: Expression) extends Expression with Ast {
+  override def toString: String = s"Apply($op, $arg)"
+}
 
-case class Literal(value: Int) extends Expression with Ast
-case class UnknownVariable(value: Int) extends Op with Ast
+case class Literal(value: Long) extends Expression with Ast
+case class UnknownVariable(value: Long) extends Op with Ast
 
 case object Nil extends Expression with Ast with Op
 
@@ -79,4 +81,4 @@ case object Interact0 extends Ast with Op
 case class Interact1(protocol: Expression) extends Ast with Op
 case class Interact2(protocol: Expression, state: Expression) extends Ast with Op
 
-case class Function(id: Int, expr: Expression) extends Ast
+case class FunctionDef(id: Long, expr: Expression) extends Ast

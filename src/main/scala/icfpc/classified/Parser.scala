@@ -1,10 +1,11 @@
 package icfpc.classified
 
-class Parser {
+object Parser {
 
-  val basicOperations: Seq[(String, Ast, Int)] = List(
+  private val basicOperations: Seq[(String, Ast, Int)] = List(
     ("inc", Inc0, 0),
     ("dec", Dec0, 0),
+    ("add", Sum0, 0),
     ("mul", Mul0, 0),
     ("div", Div0, 0),
     ("eq", EqualTo0, 0),
@@ -46,8 +47,8 @@ class Parser {
           case Some(value) =>
             value._2 -> data.tail
           case None =>
-            if (v.startsWith(":")) UnknownVariable(v.stripPrefix(":").toInt) -> data.tail
-            else Literal(v.toInt) -> data.tail
+            if (v.startsWith(":")) UnknownVariable(v.stripPrefix(":").toLong) -> data.tail
+            else Literal(v.toLong) -> data.tail
         }
     }
   }
@@ -57,6 +58,7 @@ class Parser {
       case Literal(value) => value.toString
       case UnknownVariable(value) => s":$value"
       case Apply(op, arg) => s"ap ${printText(op)} ${printText(arg)}"
+      case FunctionDef(id, exp) => s":$id = ${printText(exp)}"
       case v =>
         basicOperations.find(_._2 == v) match {
           case Some(value) => value._1
@@ -74,7 +76,7 @@ class Parser {
       case Product1(left) => Apply(Product0, left)
       case Mul1(left) => Apply(Mul0, left)
       case Div1(left) => Apply(Div0, left)
-      case Function(id, expr) => ???
+      case FunctionDef(id, expr) => ???
     }
   }
 }
