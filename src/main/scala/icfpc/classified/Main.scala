@@ -1,5 +1,7 @@
-import java.net._
-import java.net.http._
+package icfpc.classified
+
+import java.net.http.{HttpClient, HttpRequest, HttpResponse}
+import java.net.{HttpURLConnection, URI}
 
 import scala.util.control.NonFatal
 
