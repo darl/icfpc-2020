@@ -20,6 +20,7 @@ object Interpreter {
       case Apply(op, arg) =>
         operation(op)(Interpreter.exec(arg)) match {
           case carry: Op => arg => operation(carry)(arg)
+          case _ => throw new IllegalStateException("Expecting op from apply to carry")
         }
       case _: Literal => throw new IllegalStateException("Can't operate with literal")
     }
