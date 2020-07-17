@@ -38,17 +38,14 @@ object Interpreter {
       case Sum0 => Sum1.apply
       case Sum1(left) => arg => Literal(left.value + arg.value)
       case Product0 => ???
-      case Product1(left) => ???
-      case Product(left, right) => ???
+      case Product1(left) => arg => Literal(left.value * arg.value)
       case Negate0 => ???
-      case Negate(exp) => ???
+      case Mul0 => ???
+      case Mul1(left) => ???
       case Div0 => ???
       case Div1(left) => ???
-      case Div(left, right) => ???
-      case Succ0 => ???
-      case Succ(exp) => ???
-      case Pred0 => ???
-      case Pred(exp) => ???
+      case Inc0 => ???
+      case Dec0 => ???
       case Function(id, expr) => ???
     }
   }
