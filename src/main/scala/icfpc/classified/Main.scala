@@ -28,12 +28,10 @@ object Main extends App {
   println("Joining")
   var state: Expression = interactor.join()
   println("join = " + state)
-  var world = WorldState.parse(state)
-  println("world = " + world)
 
-  state = interactor.start(10, 10, 10, 10)
+  state = interactor.start(128, 64, 64, 32)
   println("start = " + state)
-  world = WorldState.parse(state)
+  var world = WorldState.parse(state)
   println("world = " + world)
 
   println("Started")
@@ -41,7 +39,7 @@ object Main extends App {
     val actions = bot.run(world)
     println("actions = " + actions)
     val commands = actions.serialize
-    println("sending = $commands")
+    println("sending = " + commands)
     state = interactor.command(commands)
     println("commands = " + state)
     world = WorldState.parse(state)
