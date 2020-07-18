@@ -19,7 +19,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
   }
 
   def eval(expression: Expression): Expression = {
-    val cached = cache.get(expression)
+    val cached = if (expression.canCache) cache.get(expression) else None
     if (cached.nonEmpty) return cached.get
 
     @scala.annotation.tailrec
@@ -31,15 +31,11 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
         case e => e
       }
 
-//    val id = idGen.incrementAndGet()
-//    println(s"Eval($id) = " + expression)
     var prevResult = expression
     var result = doEval(expression)
-//    println(s"Result($id) = " + result)
     while (result != prevResult) {
       prevResult = result
       result = doEval(result)
-//      println(s"Result($id) = " + result)
     }
     if (expression.canCache) cache.put(expression, result)
     result
