@@ -1,6 +1,5 @@
 package icfpc.classified
 
-import icfpc.classified.game.ShapeReader
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

@@ -3,8 +3,6 @@ package icfpc.classified
 import java.awt.event._
 import java.awt.image.BufferedImage
 import java.awt.{BorderLayout, Color, Dimension, Graphics}
-
-import icfpc.classified.game.{Locator, Shape, ShapeReader}
 import javax.swing.{JFrame, JPanel}
 
 import scala.util.Random
@@ -52,7 +50,6 @@ object Renderer {
   }
 
   def show(canvases: Seq[Canvas])(onClick: (Int, Int) => Seq[Canvas]): JFrame = {
-    val shipShape: Shape = ShapeReader.read("/ship3.png")
     var rendered = renderSeq(canvases)
 
     val frame = new JFrame("Galaxy");
@@ -91,18 +88,6 @@ object Renderer {
     plane.addMouseWheelListener((e: MouseWheelEvent) => {
       plane.scale = Math.max(2, plane.scale + e.getUnitsToScroll)
       plane.repaint()
-    })
-
-    frame.addKeyListener(new KeyListener {
-      override def keyTyped(e: KeyEvent): Unit = ()
-
-      override def keyPressed(e: KeyEvent): Unit = {
-        if (e.getKeyChar == '1') {
-          println(Locator.find(shipShape, savedCanvas))
-        }
-      }
-
-      override def keyReleased(e: KeyEvent): Unit = ()
     })
 
     frame.addWindowListener(new WindowAdapter {
