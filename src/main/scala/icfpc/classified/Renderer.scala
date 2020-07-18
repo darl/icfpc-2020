@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage
 
 import javax.swing.{JFrame, JPanel, WindowConstants}
 
+import scala.util.Random
+
 object Renderer {
 
   def render(canvases: Canvas*): JFrame = renderSeq(canvases)
@@ -15,7 +17,7 @@ object Renderer {
     val width = canvases.map(_.points.maxBy(_._1)._1).max - minX + 1
     val height = canvases.map(_.points.maxBy(_._2)._2).max - minY + 1
 
-    val image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY)
+    val image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val g = image.createGraphics()
 
     // clear background
@@ -23,7 +25,10 @@ object Renderer {
     g.fillRect(0, 0, width, height)
 
     g.setColor(Color.WHITE)
-    canvases.foreach(_.points.foreach(p => g.drawLine(-minX + p._1, -minY + p._2, -minX + p._1, -minY + p._2)))
+    canvases.foreach { canvas =>
+      canvas.points.foreach(p => g.drawLine(-minX + p._1, -minY + p._2, -minX + p._1, -minY + p._2))
+      g.setColor(new Color(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255), 255 / canvases.size))
+    }
     g.dispose()
 
     javax.imageio.ImageIO.write(image, "png", new java.io.File("drawing.png"))
