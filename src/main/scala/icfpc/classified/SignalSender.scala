@@ -18,7 +18,7 @@ class HttpSignalSender(serverUrl: String, apiKey: String) extends SignalSender {
 
   override def send(signal: String): String = {
     val request = HttpRequest.newBuilder
-      .uri(base.relativize(URI.create(s"/aliens/send?apiKey=$apiKey")))
+      .uri(URI.create(s"https://icfpc2020-api.testkontur.ru/aliens/send?apiKey=$apiKey"))
       .version(HttpClient.Version.HTTP_1_1)
       .POST(HttpRequest.BodyPublishers.ofString(signal))
       .build
