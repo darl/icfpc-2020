@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-scala /solution/build/Main.jar "$@" || echo "run error code: $?"
+java -jar /solution/main.jar "$@" || echo "run error code: $?"
