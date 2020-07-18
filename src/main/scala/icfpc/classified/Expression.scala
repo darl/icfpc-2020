@@ -9,13 +9,13 @@ case class Apply(op: Expression, arg: Expression) extends Expression with Ast {
   override def toString: String = s"Apply($op, $arg)"
 }
 
-case class Literal(value: Long) extends Expression with Ast
+case class Literal(value: Long) extends Ast
 case class UnknownVariable(value: Long) extends Ast
 
 case object Nil extends Expression with Ast with Op
 
 case object Cons0 extends Expression with Ast with Op
-case class Cons1(tail: Expression) extends Op
+case class Cons1(head: Expression) extends Op
 case class Cons(head: Expression, tail: Expression) extends Op
 
 case object False0 extends Expression with Ast with Op

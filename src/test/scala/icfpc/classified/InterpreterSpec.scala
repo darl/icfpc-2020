@@ -45,9 +45,19 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
     }
 
     "List stuff" in {
-      exec(Apply(Car, Apply(Apply(Apply(Cons0, Nil), 1), 2))) should equal(Literal(2))
-      eval(Apply(Cdr, Apply(Apply(Apply(Cons0, Nil), 1), 2))) should equal((Cons(1, Nil)))
+      eval(makeList(1, 2, 3)) shouldEqual eval(Cons(1, Cons(2, Cons(3, Nil))))
+
+
+      exec(Apply(Car, makeList(2, 1))) should equal(Literal(2))
+      eval(Apply(Cdr, makeList(1, 2, 3))) should equal(eval(Cons(2, Cons(3, Nil))))
       exec(Apply(Apply(Apply(IsNil, Apply(Cdr, Cons(1, Nil))), 1), 2)) should equal(Literal(1))
+    }
+
+    "Cons" in {
+      eval(Apply(Cons0, 1)) shouldEqual eval(Cons1(1))
+      eval(Apply(Apply(Cons0, 1), Nil)) shouldEqual Cons(1, Nil)
+      eval(Apply(Cons1(1), 2)) shouldEqual eval(Cons(1, 2))
+      eval(Apply(Apply(Cons0, 1), 2)) shouldEqual eval(Cons(1, 2))
     }
 
     "logic" in {
@@ -60,9 +70,9 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
     }
 
     "GALAXY" in {
-      val int = Interpreter(GalaxyOps.functions.map(f => f.id -> f.expr).toMap)
-      val res = int.exec(Apply(True0, UnknownVariable(1338)))
-      Console.println(res)
+      val int = Interpreter(GalaxyOps.functions)
+//      val res = int.exec(Apply(Interact0, GalaxyOps.Galaxy))
+//      Console.println(res)
     }
   }
 }
