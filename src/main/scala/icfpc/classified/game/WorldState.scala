@@ -16,9 +16,15 @@ object WorldState {
 
   def parse(response: Expression): WorldState = {
     val responseList = response.toList
-//    val
-    val settings = response(2).toList
-    val state = response(3).toList
+    val statusId = responseList.head.toLiteral
+    val settings = responseList(2).toList
+    val state = responseList(3).toList
+
+    val status = statusId.value.toInt match {
+      case 0 => NotStarted
+      case 1 => Started
+      case _ => Finished
+    }
 
     val actors = state(2).toList
     val defender = actors.head.toList
@@ -42,6 +48,7 @@ object WorldState {
       health = 100
     )
 
-    WorldState(Started, attackerCompiled, defenderCompiled, ???)
+
+    WorldState(status, attackerCompiled, defenderCompiled, ???)
   }
 }
