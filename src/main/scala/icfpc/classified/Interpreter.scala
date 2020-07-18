@@ -94,7 +94,16 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case IfZero1(cond) => left => IfZero2(cond, left)
       case IfZero2(cond, left) => right => if (cond) left else right
       case Identity => identity
-
+      
+      case Draw => args =>
+        drawPoints(eval(args))
+      case MultiDraw => args =>
+        eval(args) match {
+          case Cons(head: Cons, tail: Cons) => Cons(Apply(Draw, head), Apply(MultiDraw, tail))
+          case Nil => Nil
+          case other => throw new IllegalStateException(s"Can't convert $other to list")
+        }
+      
       case Send => arg => send(eval(arg))
       case Interact0 => arg => Interact1(arg)
       case Interact1(protocol) => arg => Interact2(protocol, arg)
@@ -102,6 +111,16 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
     }
   }
 
+  private def drawPoints(points: Expression): Canvas = {
+    points match {
+      case Nil => new Canvas
+      case Cons(Cons(Literal(x), Literal(y)), tail) =>
+        val canvas = drawPoints(tail)
+        canvas.drawPoint(x, y)
+        canvas
+      case other => throw new IllegalStateException(s"Can't convert $other to list of 2d points")
+    }
+    
   // just to ensure that expression is serializable
   private def modem(ex: Expression): Expression = {
     Demodulator.demodulate(Modulator.modulate(ex))

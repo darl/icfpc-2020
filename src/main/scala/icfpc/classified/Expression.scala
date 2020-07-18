@@ -82,3 +82,7 @@ case class Interact1(protocol: Expression) extends Ast with Op
 case class Interact2(protocol: Expression, state: Expression) extends Ast with Op
 
 case class FunctionDef(id: Long, expr: Expression) extends Ast
+
+class Canvas extends Expression {
+  def drawPoint(x: Long, y: Long): Unit = ()
+}
