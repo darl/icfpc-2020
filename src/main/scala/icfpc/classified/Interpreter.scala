@@ -24,15 +24,15 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
         case e => e
       }
 
-    val id = idGen.incrementAndGet()
-    println(s"Eval($id) = " + expression)
+//    val id = idGen.incrementAndGet()
+//    println(s"Eval($id) = " + expression)
     var prevResult = expression
     var result = doEval(expression)
-    println(s"Result($id) = " + result)
+//    println(s"Result($id) = " + result)
     while (result != prevResult) {
       prevResult = result
       result = doEval(result)
-      println(s"Result($id) = " + result)
+//      println(s"Result($id) = " + result)
     }
     result
   }
@@ -52,9 +52,9 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case BComb2(x0, x1) => x2 => Apply(x0, Apply(x1, x2))
 
       //ap ap ap c x0 x1 x2   =   ap ap x0 x2 x1
-      case CComb0 => CComb1.apply
+      case CComb0 => arg => CComb1(arg)
       case CComb1(x0) => x1 => CComb2(x0, x1)
-      case CComb2(x0, x1) => x2 => Apply(Apply(x0, x2), x1)
+      case CComb2(x0, x1) => x2 => x0(x2)(x1)
 
       //ap ap ap s x0 x1 x2   =   ap ap x0 x2 ap x1 x2
       case SComb0 => SComb1.apply
@@ -65,7 +65,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case Car => arg => eval(arg).toCons.head
       case Cdr => arg => eval(arg).toCons.tail
       case Cons0 => arg => Cons1(arg)
-      case Cons1(head) => arg => Cons(head, arg)
+      case Cons1(head) => arg => Cons(eval(head), eval(arg))
       case Cons(head, tail) => arg => Apply(Apply(eval(arg), head), tail)
       case Nil => _ => True0
       case IsNil => arg => if (eval(arg) == Nil) True0 else False0
@@ -116,7 +116,8 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
     
   // just to ensure that expression is serializable
   private def modem(ex: Expression): Expression = {
-    Demodulator.demodulate(Modulator.modulate(ex))
+    val mod = Modulator.modulate(eval(ex))
+    Demodulator.demodulate(mod)
   }
 
   private def multipleDraw(expression: Expression): Expression = {
@@ -128,7 +129,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
   }
 
   private def send(data: Expression): Expression = {
-    val signal = Modulator.modulate(data)
+    val signal = Modulator.modulate(eval(data))
     val result = sender.send(signal)
     Demodulator.demodulate(result)
   }
@@ -136,8 +137,10 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
   private def f38(protocol: Expression, list: Expression): Expression = {
     val params = eval(list)
     val flag = params.toCons.head
-    val newState = params.toCons.tail.toCons.head
-    val data = params.toCons.tail.toCons.tail.toCons.head
+    val tail1 = eval(params.toCons.tail)
+    val newState = tail1.toCons.head
+    val tail2 = eval(tail1.toCons.tail)
+    val data = tail2.toCons.head
 
     if (flag == Literal(0))
       makeList(modem(newState), multipleDraw(data))

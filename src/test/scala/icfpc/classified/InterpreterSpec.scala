@@ -89,11 +89,7 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
 
     "eval galaxy" in {
       val int = Interpreter(GalaxyOps.functions, IdentitySignalSender)
-//      val res = int.eval(GalaxyOps.Galaxy)
-//      println(res)
-//      println(int.eval(res(Nil)))
-//      println(GalaxyOps.Galaxy(Nil)(Nil))
-      println(int.eval(GalaxyOps.Galaxy(Nil)(makeList())))
+      println(int.eval(GalaxyOps.Galaxy(Nil)(pair(0, 0))))
     }
 
     "interact GALAXY" in {
@@ -101,7 +97,7 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         GalaxyOps.functions,
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
-      val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(Nil))
+      val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(pair(0, 0)))
       Console.println(res)
     }
   }

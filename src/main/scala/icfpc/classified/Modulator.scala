@@ -15,7 +15,8 @@ object Modulator {
           builder.append("11")
           stack.push(tail)
           stack.push(head)
-        case _ => throw new IllegalArgumentException("Can modulate only literals and lists of lists and literals")
+        case e =>
+          throw new IllegalArgumentException("Can modulate only literals and lists of lists and literals. Got: " + e)
       }
     }
     builder.toString()
