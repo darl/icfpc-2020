@@ -1,10 +1,10 @@
 package icfpc.classified
 
-import java.awt.event.{MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener, WindowAdapter, WindowEvent}
-import java.awt.{BorderLayout, Color, Dimension, Graphics, Image}
+import java.awt.event._
 import java.awt.image.BufferedImage
+import java.awt.{BorderLayout, Color, Dimension, Graphics}
 
-import javax.swing.{JFrame, JPanel, WindowConstants}
+import javax.swing.{JFrame, JPanel}
 
 import scala.util.Random
 
@@ -39,7 +39,7 @@ object Renderer {
     Rendered(image, minX, minY, width, height)
   }
 
-  case class MyPlane(var image: BufferedImage, var scale: Int = 8) extends JPanel {
+  case class MyPlane(var image: BufferedImage, var scale: Int = 32) extends JPanel {
 
     override def getPreferredSize: Dimension = {
       new Dimension(image.getWidth * scale, image.getHeight * scale)
@@ -85,7 +85,7 @@ object Renderer {
     })
 
     plane.addMouseWheelListener((e: MouseWheelEvent) => {
-      plane.scale = plane.scale + e.getUnitsToScroll
+      plane.scale = Math.max(2, plane.scale + e.getUnitsToScroll)
       plane.repaint()
     })
 
