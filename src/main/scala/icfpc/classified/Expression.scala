@@ -7,6 +7,8 @@ sealed trait Op extends Expression
 
 case class Apply(op: Expression, arg: Expression) extends Expression with Ast {
   override def toString: String = s"Apply($op, $arg)"
+
+  override def hashCode(): Int = op.hashCode() + 42 * arg.hashCode()
 }
 
 case class Literal(value: BigInt) extends Ast
