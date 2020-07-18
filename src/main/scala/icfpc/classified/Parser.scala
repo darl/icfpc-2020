@@ -29,7 +29,7 @@ object Parser {
     ("checkerboard", Checkerboard0, 0),
     ("send", Send, 0),
     ("if0", IfZero0, 0),
-    ("interact", Interact0, 0),
+    ("interact", Interact0, 0)
   )
 
   def parseBinary(data: List[Int]): Expression = ???
@@ -41,7 +41,7 @@ object Parser {
         val (arg, tail) = parseText(rest)
         Apply(op, arg) -> tail
 
-        //todo list syntax
+      //todo list syntax
       case v =>
         basicOperations.find(_._1 == v) match {
           case Some(value) =>
@@ -73,7 +73,6 @@ object Parser {
       case Cons1(head) => Apply(Cons0, head)
       case Cons(head, tail) => Apply(Cons1(head), tail)
       case Sum1(left) => Apply(Sum0, left)
-      case Product1(left) => Apply(Product0, left)
       case Mul1(left) => Apply(Mul0, left)
       case Div1(left) => Apply(Div0, left)
       case FunctionDef(id, expr) => ???

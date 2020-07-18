@@ -26,9 +26,6 @@ case class True(value: Expression) extends Op
 case object Sum0 extends Expression with Ast with Op
 case class Sum1(left: Literal) extends Op
 
-case object Product0 extends Expression with Ast with Op
-case class Product1(left: Literal) extends Op
-
 case object Negate0 extends Expression with Ast with Op
 
 case object Mul0 extends Expression with Ast with Op
@@ -77,8 +74,8 @@ case class Checkerboard1(width: Expression) extends Op
 case object Send extends Ast with Op
 
 case object IfZero0 extends Ast with Op
-case class IfZero1(cond: Expression) extends Op
-case class IfZero2(cond: Expression, left: Expression) extends Op
+case class IfZero1(cond: Boolean) extends Op
+case class IfZero2(cond: Boolean, left: Expression) extends Op
 
 case object Interact0 extends Ast with Op
 case class Interact1(protocol: Expression) extends Ast with Op

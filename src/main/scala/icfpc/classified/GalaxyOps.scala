@@ -4,7 +4,7 @@ import scala.io.Source
 
 object GalaxyOps {
 
-  val functions = Source
+  val functions: List[FunctionDef] = Source
     .fromResource("galaxy.txt")
     .getLines()
     .takeWhile(_.startsWith(":"))
@@ -19,7 +19,6 @@ object GalaxyOps {
     .toList
 
   val Galaxy: UnknownVariable = UnknownVariable(1338)
-
 
   def main(args: Array[String]): Unit = {
     functions.foreach(println)

@@ -5,15 +5,19 @@ object Interpreter {
   def exec(expression: Expression): Literal = {
     eval(expression) match {
       case result: Literal => result
-      case apply: Apply => exec(apply)
       case t =>
         throw new IllegalStateException(s"Program result $t isn't literal")
     }
   }
 
-  private def eval(expression: Expression): Expression = {
+  @scala.annotation.tailrec
+  private[classified] def eval(expression: Expression): Expression = {
     expression match {
-      case app: Apply => operation(app.op)(app.arg)
+      case app: Apply =>
+        operation(app.op)(app.arg) match {
+          case app2: Apply => eval(app2)
+          case other => other
+        }
       case literal: Literal => literal
       case op: Op => op
     }
@@ -73,11 +77,14 @@ object Interpreter {
       case Negate0 => arg => Literal(-eval(arg).toLiteral.value)
       case Power2 => arg => Literal(Math.pow(2, eval(arg).toLiteral.value).toInt)
 
-      case LessThan0 => ???
-      case LessThan1(left) => ???
-      case EqualTo0 => ???
-      case EqualTo1(left) => ???
-      case Identity => ???
+      case LessThan0 => arg => LessThan1(eval(arg).toLiteral)
+      case LessThan1(left) => right => if (left.value < eval(right).toLiteral.value) True0 else False0
+      case EqualTo0 => arg => EqualTo1(eval(arg).toLiteral)
+      case EqualTo1(left) => right => if (left.value == eval(right).toLiteral.value) True0 else False0
+      case IfZero0 => arg => IfZero1(eval(arg).toLiteral.value == 0)
+      case IfZero1(cond) => left => IfZero2(cond, left)
+      case IfZero2(cond, left) => right => if (cond) left else right
+      case Identity => identity
 
       case UnknownVariable(value) => ???
     }
