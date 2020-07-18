@@ -41,7 +41,7 @@ object Main extends App {
     val actions = bot.run(world)
     println("actions = " + actions)
     val commands = actions.serialize
-    println("sending = $commands")
+    println("sending = " + commands)
     state = interactor.command(commands)
     println("commands = " + state)
     world = WorldState.parse(state)
