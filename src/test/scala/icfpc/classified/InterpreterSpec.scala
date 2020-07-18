@@ -1,5 +1,7 @@
 package icfpc.classified
 
+import java.awt.event.{WindowAdapter, WindowEvent}
+
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -54,6 +56,8 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
       exec(Apply(Car, makeList(2, 1))) should equal(Literal(2))
       eval(Apply(Cdr, makeList(1, 2, 3))) should equal(eval(Cons(2, Cons(3, Nil))))
       exec(Apply(Apply(Apply(IsNil, Apply(Cdr, Cons(1, Nil))), 1), 2)) should equal(Literal(1))
+
+      eval(makeList(1, 2, 3)).toList shouldBe List(Literal(1), Literal(2), Literal(3))
     }
 
     "Cons" in {
@@ -98,7 +102,24 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
       val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(pair(0, 0)))
-      Console.println(res)
+      val lock = new Object
+
+      val (state, rest) = res.toPair
+      println(state)
+      val canvases = rest.toList.head
+
+      val frame = Renderer.render(canvases.toList.map(_.toCanvas): _*)
+
+      frame.addWindowListener(new WindowAdapter {
+        override def windowClosing(e: WindowEvent): Unit = {
+          lock.synchronized {
+            lock.notify()
+          }
+        }
+      })
+      lock.synchronized {
+        lock.wait()
+      }
     }
   }
 }

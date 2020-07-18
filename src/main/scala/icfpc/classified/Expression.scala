@@ -85,4 +85,6 @@ case class FunctionDef(id: Long, expr: Expression) extends Ast
 
 case class Canvas(points: List[(Int, Int)]) extends Expression {
   def withPoint(point: (Int, Int)): Canvas = this.copy(points :+ point)
+  def isEmpty = points.isEmpty
+  def nonEmpty = points.nonEmpty
 }

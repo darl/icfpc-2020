@@ -131,7 +131,9 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
   private def send(data: Expression): Expression = {
     val signal = Modulator.modulate(eval(data))
+//    println("Sending " + signal)
     val result = sender.send(signal)
+//    println("Received " + result)
     Demodulator.demodulate(result)
   }
 
@@ -167,5 +169,26 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
         case res: Cons => res
         case other => throw new IllegalStateException(s"Can't convert $other to Cons")
       }
+
+    def toCanvas: Canvas =
+      expression match {
+        case c: Canvas => c
+        case other => throw new IllegalStateException(s"Can't convert $other to Canvas")
+      }
+
+    def toPair: (Expression, Expression) =
+      expression match {
+        case res: Cons => res.head -> res.tail
+        case other => throw new IllegalStateException(s"Can't convert $other to Cons")
+      }
+
+    def toList: List[Expression] = {
+      expression match {
+        case Nil => List.empty
+        case Cons(head, tail) => head :: tail.toList
+        case other => throw new IllegalStateException(s"Can't convert $other to List")
+      }
+    }
   }
+
 }
