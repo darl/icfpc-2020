@@ -59,12 +59,4 @@ object Demodulator {
     binary.startsWith("01") || binary.startsWith("10")
 
   case class DemodulatedChunk(chunk: Expression, tail: String)
-
-  class DemodulationState(var tail: String, var expr: Option[Expression])
-
-  sealed trait StackExpr
-
-  case class BasicExpr(expr: Expression) extends StackExpr
-  case class Expr(expr: Expression => Expression) extends StackExpr
-  case class HardExpr(expr: (Expression, Expression) => Expression) extends StackExpr
 }
