@@ -12,13 +12,26 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
   }
 
   private[classified] def eval(expression: Expression): Expression = {
-    expression match {
-      case app: Apply => eval(operation(app.op)(app.arg))
-      case literal: Literal => literal
-      case op: Op => op
-      case UnknownVariable(value) =>
-        eval(lib.getOrElse(value, throw new IllegalStateException(s"Can't resolve unknown variable $value")))
+    @scala.annotation.tailrec
+    def doEval(expression: Expression): Expression =
+      expression match {
+        case app: Apply => doEval(operation(app.op)(app.arg))
+        case literal: Literal => literal
+        case op: Op => op
+        case UnknownVariable(value) =>
+          lib.getOrElse(value, throw new IllegalStateException(s"Can't resolve unknown variable $value"))
+      }
+
+    println("Eval = " + expression)
+    var prevResult = expression
+    var result = doEval(expression)
+    println("Result = " + result)
+    while (result != prevResult) {
+      prevResult = result
+      result = doEval(result)
+      println("Result = " + result)
     }
+    result
   }
 
   private def operation(expression: Expression): Expression => Expression = {
@@ -29,7 +42,6 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
   }
 
   private def execOp(op: Op): Expression => Expression = {
-
     op match {
       //ap ap ap b x0 x1 x2   =   ap x0 ap x1 x2
       case BComb0 => BComb1.apply
@@ -52,9 +64,9 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
       case Car => arg => eval(arg).toCons.head
       case Cdr => arg => eval(arg).toCons.tail
-      case Cons0 => Cons1.apply
+      case Cons0 => arg => Cons1(arg)
       case Cons1(head) => arg => Cons(head, arg)
-      case Cons(head, tail) => arg => Apply(Apply(arg, head), tail)
+      case Cons(head, tail) => arg => Apply(Apply(eval(arg), head), tail)
       case Nil => _ => True0
       case IsNil => arg => if (eval(arg) == Nil) True0 else False0
       case True(value) => _ => value
@@ -82,12 +94,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case IfZero1(cond) => left => IfZero2(cond, left)
       case IfZero2(cond, left) => right => if (cond) left else right
       case Identity => identity
-
-      case Send =>
-        arg =>
-          val signal = Modulator.modulate(arg)
-          val result = sender.send(signal)
-          Demodulator.demodulate(result)
+      
       case Draw => args =>
         drawPoints(eval(args))
       case MultiDraw => args =>
@@ -96,9 +103,11 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
           case Nil => Nil
           case other => throw new IllegalStateException(s"Can't convert $other to list")
         }
+      
+      case Send => arg => send(eval(arg))
       case Interact0 => arg => Interact1(arg)
       case Interact1(protocol) => arg => Interact2(protocol, arg)
-      case Interact2(protocol, state) => vector => makeList(0, vector)
+      case Interact2(protocol, state) => data => interact(eval(protocol), state, data)
     }
   }
 
@@ -111,6 +120,37 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
         canvas
       case other => throw new IllegalStateException(s"Can't convert $other to list of 2d points")
     }
+    
+  // just to ensure that expression is serializable
+  private def modem(ex: Expression): Expression = {
+    Demodulator.demodulate(Modulator.modulate(ex))
+  }
+
+  private def multipleDraw(expression: Expression): Expression = {
+    expression //TODO
+  }
+
+  private def send(data: Expression): Expression = {
+    val signal = Modulator.modulate(data)
+    val result = sender.send(signal)
+    Demodulator.demodulate(result)
+  }
+
+  private def f38(protocol: Expression, list: Expression): Expression = {
+    val params = eval(list)
+    println("f38 params = " + params)
+    val flag = params.toCons.head
+    val newState = params.toCons.tail.toCons.head
+    val data = params.toCons.tail.toCons.tail.toCons.head
+
+    if (flag == Literal(0))
+      makeList(modem(newState), multipleDraw(data))
+    else
+      interact(protocol, modem(newState), send(data))
+  }
+
+  private def interact(protocol: Expression, state: Expression, data: Expression): Expression = {
+    f38(protocol, protocol(state)(data))
   }
 
   implicit class RichExpression(private val expression: Expression) {
