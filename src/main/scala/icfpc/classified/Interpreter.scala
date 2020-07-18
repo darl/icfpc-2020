@@ -41,7 +41,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       result = doEval(result)
 //      println(s"Result($id) = " + result)
     }
-    cache.put(expression, result)
+    if (expression.canCache) cache.put(expression, result)
     result
   }
 
@@ -196,6 +196,13 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
         case other => throw new IllegalStateException(s"Can't convert $other to List")
       }
     }
+
+    def canCache: Boolean =
+      expression match {
+        case Apply(Send, _) => false
+        case Apply(_: Interact2, _) => false
+        case _ => true
+      }
   }
 
 }

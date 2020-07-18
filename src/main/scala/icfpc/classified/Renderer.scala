@@ -39,7 +39,7 @@ object Renderer {
     Rendered(image, minX, minY, width, height)
   }
 
-  case class MyPlane(var image: BufferedImage, var scale: Int = 32) extends JPanel {
+  case class MyPlane(var image: BufferedImage, var scale: Int = 8) extends JPanel {
 
     override def getPreferredSize: Dimension = {
       new Dimension(image.getWidth * scale, image.getHeight * scale)
