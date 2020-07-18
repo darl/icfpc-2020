@@ -1,6 +1,6 @@
 package icfpc.classified
 
-object Interpreter {
+case class Interpreter(lib: Map[Long, FunctionDef]) {
 
   def exec(expression: Expression): Literal = {
     eval(expression) match {
@@ -10,7 +10,6 @@ object Interpreter {
     }
   }
 
-  @scala.annotation.tailrec
   private[classified] def eval(expression: Expression): Expression = {
     expression match {
       case app: Apply =>
@@ -20,6 +19,11 @@ object Interpreter {
         }
       case literal: Literal => literal
       case op: Op => op
+      case UnknownVariable(value) =>
+        val inner = lib
+          .getOrElse(value, throw new IllegalStateException(s"Can't resolve unknown variable $value"))
+          .expression
+        eval(inner)
     }
   }
 
@@ -51,7 +55,11 @@ object Interpreter {
       //ap ap ap s x0 x1 x2   =   ap ap x0 x2 ap x1 x2
       case SComb0 => SComb1.apply
       case SComb1(x0) => x1 => SComb2(x0, x1)
-      case SComb2(x0, x1) => x2 => Apply(Apply(x0, x2), Apply(x1, x2))
+      case SComb2(x0, x1) =>
+        x2 => {
+          val x2Eval = eval(x2)
+          Apply(Apply(x0, x2Eval), Apply(x1, x2Eval))
+        }
 
       case Car => arg => eval(arg).toCons.head
       case Cdr => arg => eval(arg).toCons.tail
@@ -85,8 +93,6 @@ object Interpreter {
       case IfZero1(cond) => left => IfZero2(cond, left)
       case IfZero2(cond, left) => right => if (cond) left else right
       case Identity => identity
-
-      case UnknownVariable(value) => ???
     }
   }
 

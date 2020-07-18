@@ -4,7 +4,8 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class InterpreterSpec extends AnyWordSpec with Matchers {
-  import Interpreter._
+  val interpreter = Interpreter(Map.empty)
+  import interpreter._
 
   "Interpreter" should {
     "number operations" in {

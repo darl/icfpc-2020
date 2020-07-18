@@ -10,7 +10,7 @@ case class Apply(op: Expression, arg: Expression) extends Expression with Ast {
 }
 
 case class Literal(value: Long) extends Expression with Ast
-case class UnknownVariable(value: Long) extends Op with Ast
+case class UnknownVariable(value: Long) extends Ast
 
 case object Nil extends Expression with Ast with Op
 
