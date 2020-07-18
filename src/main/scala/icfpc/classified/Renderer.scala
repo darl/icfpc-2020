@@ -1,6 +1,6 @@
 package icfpc.classified
 
-import java.awt.event.{MouseEvent, MouseListener, WindowAdapter, WindowEvent}
+import java.awt.event.{MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener, WindowAdapter, WindowEvent}
 import java.awt.{BorderLayout, Color, Dimension, Graphics, Image}
 import java.awt.image.BufferedImage
 
@@ -39,16 +39,15 @@ object Renderer {
     Rendered(image, minX, minY, width, height)
   }
 
-  case class MyPlane(var image: BufferedImage) extends JPanel {
-    val Scale = 32
+  case class MyPlane(var image: BufferedImage, var scale: Int = 8) extends JPanel {
 
     override def getPreferredSize: Dimension = {
-      new Dimension(image.getWidth * Scale, image.getHeight * Scale)
+      new Dimension(image.getWidth * scale, image.getHeight * scale)
     }
 
     override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
-      g.drawImage(image, 0, 0, image.getWidth * Scale, image.getHeight() * Scale, null)
+      g.drawImage(image, 0, 0, image.getWidth * scale, image.getHeight() * scale, null)
     }
   }
 
@@ -61,8 +60,7 @@ object Renderer {
     frame.add(plane);
     frame.pack();
     frame.setLocationRelativeTo(null);
-    frame.setVisible(true);
-    frame.setResizable(false)
+    frame.setVisible(true)
 
     val lock = new Object
 
@@ -70,8 +68,8 @@ object Renderer {
       override def mouseClicked(e: MouseEvent): Unit = {}
 
       override def mousePressed(e: MouseEvent): Unit = {
-        val x = e.getX / plane.Scale + rendered.minX
-        val y = e.getY / plane.Scale + rendered.minY
+        val x = e.getX / plane.scale + rendered.minX
+        val y = e.getY / plane.scale + rendered.minY
         println(s"$x $y")
         val newCanvases = onClick(x, y)
         rendered = renderSeq(newCanvases)
@@ -84,6 +82,11 @@ object Renderer {
       override def mouseEntered(e: MouseEvent): Unit = ()
 
       override def mouseExited(e: MouseEvent): Unit = ()
+    })
+
+    plane.addMouseWheelListener((e: MouseWheelEvent) => {
+      plane.scale = plane.scale + e.getUnitsToScroll
+      plane.repaint()
     })
 
     frame.addWindowListener(new WindowAdapter {
