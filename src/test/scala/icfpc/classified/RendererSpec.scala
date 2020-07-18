@@ -11,7 +11,7 @@ class RendererSpec extends AnyWordSpec {
       (-10 to 10).foreach(i => canvas2 = canvas2.withPoint(i -> -i))
       val frame = Renderer.render(canvas, canvas2)
 
-      while (frame.isActive) { Thread.sleep(1000) }
+//      while (frame.isActive) { Thread.sleep(1000) }
       succeed
     }
   }

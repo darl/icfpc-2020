@@ -1,6 +1,6 @@
 package icfpc.classified
 
-import java.awt.event.{WindowAdapter, WindowEvent}
+import java.awt.event.{MouseEvent, MouseListener, WindowAdapter, WindowEvent}
 import java.awt.{BorderLayout, Color, Dimension, Graphics, Image}
 import java.awt.image.BufferedImage
 
@@ -10,9 +10,11 @@ import scala.util.Random
 
 object Renderer {
 
-  def render(canvases: Canvas*): BufferedImage = renderSeq(canvases)
+  case class Rendered(image: BufferedImage, minX: Int, minY: Int, width: Int, height: Int)
 
-  def renderSeq(canvases: Seq[Canvas]): BufferedImage = {
+  def render(canvases: Canvas*): Rendered = renderSeq(canvases)
+
+  def renderSeq(canvases: Seq[Canvas]): Rendered = {
     val minX = canvases.filter(_.nonEmpty).map(_.points.minBy(_._1)._1).min
     val minY = canvases.filter(_.nonEmpty).map(_.points.minBy(_._2)._2).min
     val width = canvases.filter(_.nonEmpty).map(_.points.maxBy(_._1)._1).max - minX + 1
@@ -34,10 +36,10 @@ object Renderer {
     }
     g.dispose()
 
-    image
+    Rendered(image, minX, minY, width, height)
   }
 
-  case class MyPlane(image: BufferedImage) extends JPanel {
+  case class MyPlane(var image: BufferedImage) extends JPanel {
     val Scale = 8
 
     override def getPreferredSize: Dimension = {
@@ -50,16 +52,39 @@ object Renderer {
     }
   }
 
-  def show(image: BufferedImage): JFrame = {
+  def show(canvases: Seq[Canvas])(onClick: (Int, Int) => Seq[Canvas]): JFrame = {
+    var rendered = renderSeq(canvases)
+
     val frame = new JFrame("Galaxy");
     frame.setLayout(new BorderLayout());
-    frame.add(MyPlane(image));
+    val plane = MyPlane(rendered.image)
+    frame.add(plane);
     frame.pack();
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setResizable(false)
 
     val lock = new Object
+
+    plane.addMouseListener(new MouseListener {
+      override def mouseClicked(e: MouseEvent): Unit = {}
+
+      override def mousePressed(e: MouseEvent): Unit = {
+        val x = e.getX / plane.Scale + rendered.minX
+        val y = e.getY / plane.Scale + rendered.minY
+        println(s"$x $y")
+        val newCanvases = onClick(x, y)
+        rendered = renderSeq(newCanvases)
+        plane.image = rendered.image
+        plane.repaint()
+      }
+
+      override def mouseReleased(e: MouseEvent): Unit = ()
+
+      override def mouseEntered(e: MouseEvent): Unit = ()
+
+      override def mouseExited(e: MouseEvent): Unit = ()
+    })
 
     frame.addWindowListener(new WindowAdapter {
       override def windowClosing(e: WindowEvent): Unit = {
