@@ -25,7 +25,7 @@ object Modulator {
   private def modulateLiteral(value: BigInt): String = {
     val sign = if (value >= 0) "01" else "10"
 
-    val binaryValue = value.toString(2)
+    val binaryValue = value.abs.toString(2)
     val addZeros =
       if (binaryValue.length % 4 == 0) 0
       else 4 - binaryValue.length % 4
