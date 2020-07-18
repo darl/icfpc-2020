@@ -53,29 +53,5 @@ object Parser {
     }
   }
 
-  def printText(expression: Expression): String = {
-    toAst(expression) match {
-      case Literal(value) => value.toString
-      case UnknownVariable(value) => s":$value"
-      case Apply(op, arg) => s"ap ${printText(op)} ${printText(arg)}"
-      case FunctionDef(id, exp) => s":$id = ${printText(exp)}"
-      case v =>
-        basicOperations.find(_._2 == v) match {
-          case Some(value) => value._1
-          case None => s"unknown($v)"
-        }
-    }
-  }
 
-  def toAst(expression: Expression): Ast = {
-    expression match {
-      case b: Ast => b
-      case Cons1(head) => Apply(Cons0, head)
-      case Cons(head, tail) => Apply(Cons1(head), tail)
-      case Sum1(left) => Apply(Sum0, left)
-      case Mul1(left) => Apply(Mul0, left)
-      case Div1(left) => Apply(Div0, left)
-      case FunctionDef(id, expr) => ???
-    }
-  }
 }
