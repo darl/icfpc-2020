@@ -94,7 +94,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case Sum0 => arg => Sum1.apply(eval(arg).toLiteral)
       case Sum1(left) => arg => Literal(left.value + eval(arg).toLiteral.value)
       case Negate0 => arg => Literal(-eval(arg).toLiteral.value)
-      case Power2 => arg => Literal(Math.pow(2, eval(arg).toLiteral.value).toInt)
+      case Power2 => arg => Literal(Math.pow(2, eval(arg).toLiteral.value.toLong).toInt)
 
       case LessThan0 => arg => LessThan1(eval(arg).toLiteral)
       case LessThan1(left) => right => if (left.value < eval(right).toLiteral.value) True0 else False0

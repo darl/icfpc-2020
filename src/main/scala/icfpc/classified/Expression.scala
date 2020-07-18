@@ -9,7 +9,7 @@ case class Apply(op: Expression, arg: Expression) extends Expression with Ast {
   override def toString: String = s"Apply($op, $arg)"
 }
 
-case class Literal(value: Long) extends Ast
+case class Literal(value: BigInt) extends Ast
 case class UnknownVariable(value: Long) extends Ast
 
 case object Nil extends Expression with Ast with Op

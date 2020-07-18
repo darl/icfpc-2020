@@ -22,10 +22,10 @@ object Modulator {
     builder.toString()
   }
 
-  private def modulateLiteral(value: Long): String = {
+  private def modulateLiteral(value: BigInt): String = {
     val sign = if (value >= 0) "01" else "10"
 
-    val binaryValue = java.lang.Long.toUnsignedString(math.abs(value), 2)
+    val binaryValue = value.toString(2)
     val addZeros =
       if (binaryValue.length % 4 == 0) 0
       else 4 - binaryValue.length % 4
