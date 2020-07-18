@@ -73,7 +73,6 @@ object Renderer {
 //        println("BUSY")
         val x = e.getX / plane.scale + rendered.minX
         val y = e.getY / plane.scale + rendered.minY
-        println(s"$x, $y")
         val newCanvases = onClick(x, y)
         savedCanvas = newCanvases.head
         rendered = renderSeq(newCanvases)

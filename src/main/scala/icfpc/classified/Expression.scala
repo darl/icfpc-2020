@@ -16,6 +16,7 @@ case object Nil extends Expression with Ast with Op
 
 case object Cons0 extends Expression with Ast with Op
 case class Cons1(head: Expression) extends Op
+
 case class Cons(head: Expression, tail: Expression) extends Op {
   override lazy val hashCode: Int = super.hashCode()
 }
@@ -47,16 +48,28 @@ case object Inc0 extends Expression with Ast with Op
 case object Dec0 extends Expression with Ast with Op
 
 case object SComb0 extends Ast with Op
-case class SComb1(a: Expression) extends Op
-case class SComb2(a: Expression, b: Expression) extends Op
+
+case class SComb1(a: Expression) extends Op {
+  override lazy val hashCode: Int = super.hashCode()
+}
+
+case class SComb2(a: Expression, b: Expression) extends Op {
+  override lazy val hashCode: Int = super.hashCode()
+}
 
 case object CComb0 extends Ast with Op
 case class CComb1(a: Expression) extends Op
-case class CComb2(a: Expression, b: Expression) extends Op
+
+case class CComb2(a: Expression, b: Expression) extends Op {
+  override lazy val hashCode: Int = super.hashCode()
+}
 
 case object BComb0 extends Ast with Op
 case class BComb1(a: Expression) extends Op
-case class BComb2(a: Expression, b: Expression) extends Op
+
+case class BComb2(a: Expression, b: Expression) extends Op {
+  override lazy val hashCode: Int = super.hashCode()
+}
 
 case object Power2 extends Ast with Op
 
