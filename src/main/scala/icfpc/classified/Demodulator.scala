@@ -38,21 +38,7 @@ object Demodulator {
   }
 
   private def convertToDecimal(binary: String): Int = {
-    val significantPartStart = binary.indexOf("1")
-    if (significantPartStart < 0) {
-      0
-    } else {
-      val significantPart = binary.substring(significantPartStart)
-      var value = 0
-      var power = significantPart.length - 1
-      for (s <- significantPart) {
-        val digit = s.toString.toInt
-        if (digit != 0 && digit != 1) throw new IllegalArgumentException(s"Illegal digit $digit")
-        value = value + digit * math.pow(2, power).toInt
-        power = power - 1
-      }
-      value
-    }
+    java.lang.Long.parseUnsignedLong(binary, 2).toInt
   }
 
   private def isLiteralNext(binary: String): Boolean =

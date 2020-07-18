@@ -26,7 +26,7 @@ object Modulator {
   private def modulateLiteral(value: Int): String = {
     val sign = if (value >= 0) "01" else "10"
 
-    val binaryValue = convertToBinary(math.abs(value), ScalaList.empty)
+    val binaryValue = java.lang.Long.toString(math.abs(value), 2)
     val addZeros =
       if (binaryValue.length % 4 == 0) 0
       else 4 - binaryValue.length % 4
@@ -38,16 +38,5 @@ object Modulator {
       else 1.to(encodedValue.length / 4).map(_ => 1).mkString
 
     sign + encodedWidth + "0" + encodedValue
-  }
-
-  @tailrec
-  private def convertToBinary(curVal: Int, bin: ScalaList[Int]): String = {
-    if (curVal / 2 == 0) {
-      (curVal :: bin).mkString
-    } else {
-      val remains = curVal % 2
-      val divided = curVal / 2
-      convertToBinary(divided, remains :: bin)
-    }
   }
 }
