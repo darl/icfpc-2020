@@ -1,6 +1,6 @@
 package icfpc.classified
 
-case class Interpreter(lib: Map[Long, FunctionDef]) {
+case class Interpreter(lib: Map[Long, Expression]) {
 
   def exec(expression: Expression): Literal = {
     eval(expression) match {
@@ -12,30 +12,18 @@ case class Interpreter(lib: Map[Long, FunctionDef]) {
 
   private[classified] def eval(expression: Expression): Expression = {
     expression match {
-      case app: Apply =>
-        operation(app.op)(app.arg) match {
-          case app2: Apply => eval(app2)
-          case other => other
-        }
+      case app: Apply => eval(operation(app.op)(app.arg))
       case literal: Literal => literal
       case op: Op => op
       case UnknownVariable(value) =>
-        val inner = lib
-          .getOrElse(value, throw new IllegalStateException(s"Can't resolve unknown variable $value"))
-          .expression
-        eval(inner)
+        eval(lib.getOrElse(value, throw new IllegalStateException(s"Can't resolve unknown variable $value")))
     }
   }
 
   private def operation(expression: Expression): Expression => Expression = {
-    expression match {
-      case Apply(op, arg) =>
-        operation(op)(arg) match {
-          case carry: Op => arg => operation(carry)(arg)
-          case _ => throw new IllegalStateException("Expecting op from apply to carry")
-        }
+    eval(expression) match {
       case op: Op => execOp(op)
-      case _: Literal => throw new IllegalStateException("Can't operate with literal")
+      case other => throw new IllegalStateException(s"Can't operate with $other")
     }
   }
 
@@ -96,7 +84,7 @@ case class Interpreter(lib: Map[Long, FunctionDef]) {
     }
   }
 
-  implicit class RichExpression(val expression: Expression) {
+  implicit class RichExpression(private val expression: Expression) {
 
     def toLiteral: Literal =
       expression match {

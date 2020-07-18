@@ -58,5 +58,11 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
       eval(Apply(Apply(EqualTo0, 0), 1)) should equal(False0)
 
     }
+
+    "GALAXY" in {
+      val int = Interpreter(GalaxyOps.functions.map(f => f.id -> f.expr).toMap)
+      val res = int.exec(Apply(True0, UnknownVariable(1338)))
+      Console.println(res)
+    }
   }
 }
