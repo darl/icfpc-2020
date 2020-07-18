@@ -116,7 +116,6 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
     
   // just to ensure that expression is serializable
   private def modem(ex: Expression): Expression = {
-    println(s"Modem($ex) \n" + eval(ex))
     val mod = Modulator.modulate(eval(ex))
     Demodulator.demodulate(mod)
   }
