@@ -88,9 +88,28 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
           val signal = Modulator.modulate(arg)
           val result = sender.send(signal)
           Demodulator.demodulate(result)
+      case Draw => args =>
+        drawPoints(eval(args))
+      case MultiDraw => args =>
+        eval(args) match {
+          case Cons(head: Cons, tail: Cons) => Cons(Apply(Draw, head), Apply(MultiDraw, tail))
+          case Nil => Nil
+          case other => throw new IllegalStateException(s"Can't convert $other to list")
+        }
       case Interact0 => arg => Interact1(arg)
       case Interact1(protocol) => arg => Interact2(protocol, arg)
       case Interact2(protocol, state) => vector => makeList(0, vector)
+    }
+  }
+
+  private def drawPoints(points: Expression): Canvas = {
+    points match {
+      case Nil => new Canvas
+      case Cons(Cons(Literal(x), Literal(y)), tail) =>
+        val canvas = drawPoints(tail)
+        canvas.drawPoint(x, y)
+        canvas
+      case other => throw new IllegalStateException(s"Can't convert $other to list of 2d points")
     }
   }
 
