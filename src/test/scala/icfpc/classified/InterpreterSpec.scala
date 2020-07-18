@@ -4,7 +4,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class InterpreterSpec extends AnyWordSpec with Matchers {
-  val interpreter = Interpreter(Map.empty)
+  val interpreter = Interpreter(Map.empty, IdentitySignalSender)
   import interpreter._
 
   "Interpreter" should {
@@ -70,9 +70,9 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
     }
 
     "GALAXY" in {
-      val int = Interpreter(GalaxyOps.functions)
-//      val res = int.exec(Apply(Interact0, GalaxyOps.Galaxy))
-//      Console.println(res)
+      val int = Interpreter(GalaxyOps.functions, new HttpSignalSender("", ""))
+      val res = int.eval(Apply(Interact0, GalaxyOps.Galaxy))
+      Console.println(res)
     }
   }
 }

@@ -37,8 +37,8 @@ object Demodulator {
     DemodulatedChunk(Literal(sign * convertToDecimal(encodedValue)), tail)
   }
 
-  private def convertToDecimal(binary: String): Int = {
-    java.lang.Long.parseUnsignedLong(binary, 2).toInt
+  private def convertToDecimal(binary: String): Long = {
+    java.lang.Long.parseUnsignedLong(binary, 2)
   }
 
   private def isLiteralNext(binary: String): Boolean =

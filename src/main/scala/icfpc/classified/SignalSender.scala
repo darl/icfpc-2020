@@ -3,14 +3,20 @@ package icfpc.classified
 import java.net.{HttpURLConnection, URI}
 import java.net.http.{HttpClient, HttpRequest, HttpResponse}
 
-class SignalSender(serverUrl: String, apiKey: String) {
+trait SignalSender {
+  def send(signal: String): String
+}
+
+class HttpSignalSender(serverUrl: String, apiKey: String) extends SignalSender {
 
   private val base = URI.create(serverUrl)
-  private val client = HttpClient.newBuilder()
+
+  private val client = HttpClient
+    .newBuilder()
     .followRedirects(HttpClient.Redirect.ALWAYS)
     .build()
 
-  def send(signal: String): String = {
+  override def send(signal: String): String = {
     val request = HttpRequest.newBuilder
       .uri(base.relativize(URI.create(s"/aliens/send?apiKey=$apiKey")))
       .version(HttpClient.Version.HTTP_1_1)
@@ -27,4 +33,8 @@ class SignalSender(serverUrl: String, apiKey: String) {
     }
     response.body
   }
+}
+
+object IdentitySignalSender extends SignalSender {
+  override def send(signal: String): String = signal
 }

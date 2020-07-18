@@ -1,6 +1,6 @@
 package icfpc.classified
 
-case class Interpreter(lib: Map[Long, Expression]) {
+case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
   def exec(expression: Expression): Literal = {
     eval(expression) match {
@@ -81,41 +81,16 @@ case class Interpreter(lib: Map[Long, Expression]) {
       case IfZero0 => arg => IfZero1(eval(arg).toLiteral.value == 0)
       case IfZero1(cond) => left => IfZero2(cond, left)
       case IfZero2(cond, left) => right => if (cond) left else right
-      case Identity =>  identity
+      case Identity => identity
 
-//      case Cons(head, tail) =>
-//      case Div1(left) =>
-//      case EqualTo0 =>
-//      case EqualTo1(left) =>
-//      case LessThan0 =>
-//      case LessThan1(left) =>
-//      case Inc0 =>
-//      case Dec0 =>
-//      case SComb0 =>
-//      case SComb1(a) =>
-//      case SComb2(a, b) =>
-//      case CComb0 =>
-//      case CComb1(a) =>
-//      case CComb2(a, b) =>
-//      case BComb0 =>
-//      case BComb1(a) =>
-//      case BComb2(a, b) =>
-//      case Power2 =>
-//      case Identity =>
-//      case Car =>
-//      case Cdr =>
-//      case IsNil =>
-//      case Draw =>
-//      case MultiDraw =>
-//      case Checkerboard0 =>
-//      case Checkerboard1(width) =>
-//      case Send =>
-//      case IfZero0 =>
-//      case IfZero1(cond) =>
-//      case IfZero2(cond, left) =>
-//      case Interact0 =>
-//      case Interact1(protocol) =>
-//      case Interact2(protocol, state) =>
+      case Send =>
+        arg =>
+          val signal = Modulator.modulate(arg)
+          val result = sender.send(signal)
+          Demodulator.demodulate(result)
+      case Interact0 => arg => Interact1(arg)
+      case Interact1(protocol) => arg => Interact2(protocol, arg)
+      case Interact2(protocol, state) => vector => makeList(0, vector)
     }
   }
 

@@ -1,7 +1,5 @@
 package icfpc.classified
 
-import scala.annotation.tailrec
-import scala.collection.immutable.{List => ScalaList}
 import scala.collection.mutable
 
 object Modulator {
@@ -23,7 +21,7 @@ object Modulator {
     builder.toString()
   }
 
-  private def modulateLiteral(value: Int): String = {
+  private def modulateLiteral(value: Long): String = {
     val sign = if (value >= 0) "01" else "10"
 
     val binaryValue = java.lang.Long.toString(math.abs(value), 2)
