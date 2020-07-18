@@ -95,6 +95,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
   }
 
   implicit class RichExpression(private val expression: Expression) {
+    def apply(arg: Expression): Apply = Apply(expression, arg)
 
     def toLiteral: Literal =
       expression match {

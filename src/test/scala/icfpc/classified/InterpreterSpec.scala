@@ -8,6 +8,10 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
   import interpreter._
 
   "Interpreter" should {
+    "apply syntax" in {
+      Sum0(1)(2) shouldEqual Apply(Apply(Sum0, 1), 2)
+      eval(Sum0(1)(2)) shouldEqual eval(3)
+    }
     "number operations" in {
       exec(Apply(Apply(Sum0, 1), 2)).value should be(3)
       exec(Apply(Apply(Sum0, 1), Apply(Negate0, Apply(Negate0, 2)))).value should be(3)
@@ -47,7 +51,6 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
     "List stuff" in {
       eval(makeList(1, 2, 3)) shouldEqual eval(Cons(1, Cons(2, Cons(3, Nil))))
 
-
       exec(Apply(Car, makeList(2, 1))) should equal(Literal(2))
       eval(Apply(Cdr, makeList(1, 2, 3))) should equal(eval(Cons(2, Cons(3, Nil))))
       exec(Apply(Apply(Apply(IsNil, Apply(Cdr, Cons(1, Nil))), 1), 2)) should equal(Literal(1))
@@ -70,8 +73,11 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
     }
 
     "GALAXY" in {
-      val int = Interpreter(GalaxyOps.functions, new HttpSignalSender("", ""))
-      val res = int.eval(Apply(Interact0, GalaxyOps.Galaxy))
+      val int = Interpreter(
+        GalaxyOps.functions,
+        new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
+      )
+      val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(Nil))
       Console.println(res)
     }
   }
