@@ -12,6 +12,16 @@ case class Actions(
     Actions(other.drive.orElse(drive), other.fire.orElse(fire), other.sit.orElse(sit))
   }
 
+  override def toString: String =
+    productIterator
+      .map {
+        case None => ""
+        case Some(a) => a.toString
+        case a => a.toString
+      }
+      .filter(_.nonEmpty)
+      .mkString("[", ", ", "]")
+
   def serialize: Expression = {
     var commands: List[Expression] = List.empty
     drive.foreach { drive =>

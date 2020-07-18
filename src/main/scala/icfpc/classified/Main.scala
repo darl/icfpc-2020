@@ -1,6 +1,7 @@
 package icfpc.classified
 
-import icfpc.classified.game.Interactor
+import icfpc.classified.game.WorldState.Started
+import icfpc.classified.game.{BotLogic, Interactor, WorldState}
 
 object Main extends App {
 
@@ -21,20 +22,32 @@ object Main extends App {
   private val ss = new HttpSignalSender(args(0), "8d26edd4434c42df82127c1640bed928")
   private val interactor = new Interactor(ss, args(1).toLong)
 
-  val interpreter = Interpreter(
-    GalaxyOps.functions,
-    ss
-  )
-
-  var state: Expression = multiplayerState
-  var canvases: Seq[Canvas] = Seq.empty
+  val interpreter = Interpreter(GalaxyOps.functions, ss)
+  val bot = new BotLogic
 
   println("Joining")
-  println("join = " + interactor.join())
-  println("start = " + interactor.start(10, 10, 10, 10))
+  var state: Expression = interactor.join()
+  println("join = " + state)
+  var world = WorldState.parse(state)
+  println("world = " + world)
+
+  state = interactor.start(10, 10, 10, 10)
+  println("start = " + state)
+  world = WorldState.parse(state)
+  println("world = " + world)
+
   println("Started")
+  while (world.status == Started) {
+    val actions = bot.run(world)
+    println("actions = " + actions)
+    val commands = actions.serialize
+    println("sending = $commands")
+    state = interactor.command(commands)
+    println("commands = " + state)
+    world = WorldState.parse(state)
+    println("world = " + world)
+  }
+
   println("exec command = " + interactor.command(makeList(0, 0)))
 
-  // ToDo async show
-  //  Renderer.show(canvases.map(_.toCanvas))(action)
 }

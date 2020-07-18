@@ -2,14 +2,21 @@ package icfpc.classified.game
 
 import icfpc.classified._
 
-case class WorldState(attacker: Actor, defender: Actor, me: Actor) {
+import WorldState._
+
+case class WorldState(status: Status, attacker: Actor, defender: Actor, me: Actor) {
   def enemy: Actor = if (attacker == me) defender else attacker
 }
 
 object WorldState {
+  sealed trait Status
+  case object NotStarted extends Status
+  case object Started extends Status
+  case object Finished extends Status
 
   def parse(response: Expression): WorldState = {
     val responseList = response.toList
+//    val
     val settings = response(2).toList
     val state = response(3).toList
 
@@ -35,6 +42,6 @@ object WorldState {
       health = 100
     )
 
-    WorldState(attackerCompiled, defenderCompiled, ???)
+    WorldState(Started, attackerCompiled, defenderCompiled, ???)
   }
 }
