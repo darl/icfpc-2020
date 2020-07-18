@@ -4,6 +4,8 @@ import scala.language.implicitConversions
 
 package object classified {
   implicit def literal(value: Int): Literal = Literal(value)
+  implicit def literal(value: Long): Literal = Literal(value)
+  implicit def literal(value: BigInt): Literal = Literal(value)
 
   def makeList(elems: Expression*): Expression = {
     var elements = elems.reverse.toList
