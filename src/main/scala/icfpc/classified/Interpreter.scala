@@ -140,9 +140,9 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
   private def send(data: Expression): Expression = {
     val signal = Modulator.modulate(eval(data))
-    println("Sending " + signal)
+//    println("Sending " + signal)
     val result = sender.send(signal)
-    println("Received " + result)
+//    println("Received " + result)
     Demodulator.demodulate(result)
   }
 

@@ -87,4 +87,13 @@ case class Canvas(points: List[(Int, Int)]) extends Expression {
   def withPoint(point: (Int, Int)): Canvas = this.copy(points :+ point)
   def isEmpty = points.isEmpty
   def nonEmpty = points.nonEmpty
+
+  def minX: Int = points.minBy(_._1)._1
+  def minY: Int = points.minBy(_._2)._2
+  def maxX: Int = points.maxBy(_._1)._1
+  def maxY: Int = points.maxBy(_._2)._2
+
+  def width: Int = maxX - minX + 1
+  def height: Int = maxY - minY + 1
+
 }

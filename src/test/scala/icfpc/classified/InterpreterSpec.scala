@@ -1,5 +1,6 @@
 package icfpc.classified
 
+import icfpc.classified.game.ShapeReader
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -99,12 +100,12 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         GalaxyOps.functions,
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
-      var state: Expression =
-        Cons(Literal(2), Cons(Cons(Literal(1), Cons(Literal(-1), Nil)), Cons(Literal(0), Cons(Nil, Nil))))
+      var state: Expression = tutorStart
 
-      val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(1, 4)))
+      val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(0, 0)))
       val (state0, rest) = res.toPair
       state = state0
+//      println(state0)
       val canvases = rest.toList.head.toList.map(_.toCanvas)
 
       Renderer.show(canvases.map(_.toCanvas)) { (x, y) =>
@@ -116,4 +117,11 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
       }
     }
   }
+
+  val tutorStart =
+    Cons(
+      Literal(2),
+      Cons(Cons(Literal(1), Cons(Literal(-1), Nil)), Cons(Literal(0), Cons(Nil, Nil)))
+    )
+
 }
