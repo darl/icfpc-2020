@@ -16,7 +16,9 @@ case object Nil extends Expression with Ast with Op
 
 case object Cons0 extends Expression with Ast with Op
 case class Cons1(head: Expression) extends Op
-case class Cons(head: Expression, tail: Expression) extends Op
+case class Cons(head: Expression, tail: Expression) extends Op {
+  override lazy val hashCode: Int = super.hashCode()
+}
 
 case object False0 extends Expression with Ast with Op
 case object False extends Expression with Op
