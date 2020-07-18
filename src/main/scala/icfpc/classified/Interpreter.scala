@@ -54,7 +54,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case Cdr => arg => eval(arg).toCons.tail
       case Cons0 => Cons1.apply
       case Cons1(head) => arg => Cons(head, arg)
-      case cons: Cons => arg => Cons(arg, cons)
+      case Cons(head, tail) => arg => Apply(Apply(arg, head), tail)
       case Nil => _ => True0
       case IsNil => arg => if (eval(arg) == Nil) True0 else False0
       case True(value) => _ => value

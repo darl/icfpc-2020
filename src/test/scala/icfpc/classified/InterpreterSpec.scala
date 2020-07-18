@@ -61,6 +61,8 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
       eval(Apply(Apply(Cons0, 1), Nil)) shouldEqual Cons(1, Nil)
       eval(Apply(Cons1(1), 2)) shouldEqual eval(Cons(1, 2))
       eval(Apply(Apply(Cons0, 1), 2)) shouldEqual eval(Cons(1, 2))
+      eval(Apply(Cons1(1), Cons(1, 2))) shouldEqual eval(Cons(1, Cons(1, 2)))
+      eval(Apply(Apply(Apply(Cons0, 1), 2), Sum0)) should equal(Literal(3))
     }
 
     "logic" in {
