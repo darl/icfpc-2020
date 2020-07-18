@@ -28,12 +28,10 @@ object Main extends App {
   println("Joining")
   var state: Expression = interactor.join()
   println("join = " + state)
-  var world = WorldState.parse(state)
-  println("world = " + world)
 
-  state = interactor.start(10, 10, 10, 10)
+  state = interactor.start(128, 64, 64, 32)
   println("start = " + state)
-  world = WorldState.parse(state)
+  var world = WorldState.parse(state)
   println("world = " + world)
 
   println("Started")
