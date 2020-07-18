@@ -68,7 +68,9 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case SComb0 => SComb1.apply
       case SComb1(x0) => x1 => SComb2(x0, x1)
       case SComb2(x0, x1) =>
-        x2 => Apply(Apply(x0, x2), Apply(x1, x2))
+        x2 =>
+          val xx2 = eval(x2)
+          Apply(Apply(x0, xx2), Apply(x1, xx2))
 
       case Car => arg => eval(arg).toCons.head
       case Cdr => arg => eval(arg).toCons.tail
