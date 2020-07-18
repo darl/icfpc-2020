@@ -105,14 +105,12 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
       val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(1, 4)))
       val (state0, rest) = res.toPair
       state = state0
-      println(state)
       val canvases = rest.toList.head.toList.map(_.toCanvas)
 
       Renderer.show(canvases.map(_.toCanvas)) { (x, y) =>
         val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(x, y)))
         val (state0, rest) = res.toPair
         state = state0
-        println(state)
 
         rest.toList.head.toList.map(_.toCanvas)
       }

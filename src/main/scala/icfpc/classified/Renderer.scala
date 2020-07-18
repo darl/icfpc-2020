@@ -70,7 +70,6 @@ object Renderer {
       override def mousePressed(e: MouseEvent): Unit = {
         val x = e.getX / plane.scale + rendered.minX
         val y = e.getY / plane.scale + rendered.minY
-        println(s"$x $y")
         val newCanvases = onClick(x, y)
         rendered = renderSeq(newCanvases)
         plane.image = rendered.image
