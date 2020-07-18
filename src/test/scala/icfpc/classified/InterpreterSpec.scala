@@ -102,24 +102,14 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
       val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(pair(0, 0)))
-      val lock = new Object
 
       val (state, rest) = res.toPair
       println(state)
-      val canvases = rest.toList.head
+      val canvases = rest.toList.head.toList.map(_.toCanvas)
 
-      val frame = Renderer.render(canvases.toList.map(_.toCanvas): _*)
+      val image = Renderer.renderSeq(canvases)
 
-      frame.addWindowListener(new WindowAdapter {
-        override def windowClosing(e: WindowEvent): Unit = {
-          lock.synchronized {
-            lock.notify()
-          }
-        }
-      })
-      lock.synchronized {
-        lock.wait()
-      }
+      Renderer.show(image)
     }
   }
 }
