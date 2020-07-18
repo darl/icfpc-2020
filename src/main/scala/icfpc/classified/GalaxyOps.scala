@@ -13,7 +13,7 @@ object GalaxyOps {
       val (UnknownVariable(id), tail) = Parser.parseText(parts)
       require(tail.head == "=", "expected `=`")
       val (value, rest) = Parser.parseText(tail.tail)
-      require(rest.isEmpty, s"expected no mo input: $rest")
+      require(rest.isEmpty, s"expected no more input: $rest")
       FunctionDef(id, value)
     }
     .toList

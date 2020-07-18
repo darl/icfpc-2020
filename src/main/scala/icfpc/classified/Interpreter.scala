@@ -1,7 +1,10 @@
 package icfpc.classified
 
+import java.util.concurrent.atomic.AtomicLong
+
 case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
+  private val idGen = new AtomicLong()
   def exec(expression: Expression): Literal = {
     eval(expression) match {
       case result: Literal => result
@@ -16,20 +19,20 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
     def doEval(expression: Expression): Expression =
       expression match {
         case app: Apply => doEval(operation(app.op)(app.arg))
-        case literal: Literal => literal
-        case op: Op => op
         case UnknownVariable(value) =>
           lib.getOrElse(value, throw new IllegalStateException(s"Can't resolve unknown variable $value"))
+        case e => e
       }
 
-    println("Eval = " + expression)
+    val id = idGen.incrementAndGet()
+    println(s"Eval($id) = " + expression)
     var prevResult = expression
     var result = doEval(expression)
-    println("Result = " + result)
+    println(s"Result($id) = " + result)
     while (result != prevResult) {
       prevResult = result
       result = doEval(result)
-      println("Result = " + result)
+      println(s"Result($id) = " + result)
     }
     result
   }
@@ -57,10 +60,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case SComb0 => SComb1.apply
       case SComb1(x0) => x1 => SComb2(x0, x1)
       case SComb2(x0, x1) =>
-        x2 => {
-          val x2Eval = eval(x2)
-          Apply(Apply(x0, x2Eval), Apply(x1, x2Eval))
-        }
+        x2 => Apply(Apply(x0, x2), Apply(x1, x2))
 
       case Car => arg => eval(arg).toCons.head
       case Cdr => arg => eval(arg).toCons.tail
@@ -135,7 +135,6 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
   private def f38(protocol: Expression, list: Expression): Expression = {
     val params = eval(list)
-    println("f38 params = " + params)
     val flag = params.toCons.head
     val newState = params.toCons.tail.toCons.head
     val data = params.toCons.tail.toCons.tail.toCons.head
