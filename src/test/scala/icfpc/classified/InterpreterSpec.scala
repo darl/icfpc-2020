@@ -74,6 +74,12 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
 
     }
 
+    "eval galaxy" in {
+      val int = Interpreter(GalaxyOps.functions, IdentitySignalSender)
+      val res = int.eval(GalaxyOps.Galaxy)
+      println(res)
+    }
+
     "GALAXY" in {
       val int = Interpreter(
         GalaxyOps.functions,
