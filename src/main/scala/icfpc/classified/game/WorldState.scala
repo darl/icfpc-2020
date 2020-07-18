@@ -26,6 +26,8 @@ object WorldState {
       case _ => Finished
     }
 
+    val isDefence = settings(1).toLiteral.value.toInt == 1
+
     val actors = state(2).toList
     val defender = actors.head.toList
     val attacker = actors.last.toList
@@ -35,7 +37,7 @@ object WorldState {
         x = attacker.head.toList(2).toList.head.toLiteral.value.toLong,
         y = attacker.head.toList(2).toList.last.toLiteral.value.toLong
       ),
-      speed = Vector(???, ???),
+      speed = Vector(0, 0),
       health = 100
     )
 
@@ -44,11 +46,10 @@ object WorldState {
         x = defender.head.toList(2).toList.head.toLiteral.value.toLong,
         y = defender.head.toList(2).toList.last.toLiteral.value.toLong
       ),
-      speed = Vector(???, ???),
+      speed = Vector(0, 0),
       health = 100
     )
 
-
-    WorldState(status, attackerCompiled, defenderCompiled, ???)
+    WorldState(status, attackerCompiled, defenderCompiled, if (isDefence) defenderCompiled else attackerCompiled)
   }
 }

@@ -4,7 +4,13 @@ object DefenderExamples {
   List(
     Literal(1),
     Literal(1),
-    List(Literal(256), Literal(1), List(Literal(448), Literal(1), Literal(64)), List(Literal(16), Literal(128)), Nil),
+    List(
+      Literal(256),
+      Literal(1),
+      List(Literal(448), Literal(1), Literal(64)),
+      List(Literal(16), Literal(128)),
+      Nil
+    ),
     List(
       Literal(0),
       List(Literal(16), Literal(128)),
@@ -42,7 +48,13 @@ object DefenderExamples {
   List(
     Literal(1),
     Literal(1),
-    List(Literal(256), Literal(1), List(Literal(448), Literal(1), Literal(64)), List(Literal(16), Literal(128)), Nil),
+    List(
+      Literal(256),
+      Literal(1),
+      List(Literal(448), Literal(1), Literal(64)),
+      List(Literal(16), Literal(128)),
+      Nil
+    ),
     List(
       Literal(0),
       List(Literal(16), Literal(128)),
