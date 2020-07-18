@@ -7,11 +7,13 @@ import javax.swing.{JFrame, JPanel, WindowConstants}
 
 object Renderer {
 
-  def render(canvas: Canvas): JFrame = {
-    val minX = canvas.points.minBy(_._1)._1
-    val minY = canvas.points.minBy(_._2)._2
-    val width = canvas.points.maxBy(_._1)._1 - minX + 1
-    val height = canvas.points.maxBy(_._2)._2 - minY + 1
+  def render(canvases: Canvas*): JFrame = renderSeq(canvases)
+
+  def renderSeq(canvases: Seq[Canvas]): JFrame = {
+    val minX = canvases.map(_.points.minBy(_._1)._1).min
+    val minY = canvases.map(_.points.minBy(_._2)._2).min
+    val width = canvases.map(_.points.maxBy(_._1)._1).max - minX + 1
+    val height = canvases.map(_.points.maxBy(_._2)._2).max - minY + 1
 
     val image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY)
     val g = image.createGraphics()
@@ -21,7 +23,7 @@ object Renderer {
     g.fillRect(0, 0, width, height)
 
     g.setColor(Color.WHITE)
-    canvas.points.foreach(p => g.drawLine(-minX + p._1, -minY + p._2, -minX + p._1, -minY + p._2))
+    canvases.foreach(_.points.foreach(p => g.drawLine(-minX + p._1, -minY + p._2, -minX + p._1, -minY + p._2)))
     g.dispose()
 
     javax.imageio.ImageIO.write(image, "png", new java.io.File("drawing.png"))
