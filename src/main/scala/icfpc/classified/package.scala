@@ -14,4 +14,8 @@ package object classified {
     }
     res
   }
+
+  def pair(a: Expression, b: Expression): Cons = {
+    Cons(a, b)
+  }
 }
