@@ -3,7 +3,6 @@ package icfpc.classified
 import icfpc.classified.game.Interactor
 
 object Main extends App {
-  val start = System.currentTimeMillis()
 
   val multiplayerState: Cons = Cons(
     Literal(5),
@@ -26,20 +25,15 @@ object Main extends App {
     GalaxyOps.functions,
     ss
   )
-  import interpreter._
 
   var state: Expression = multiplayerState
   var canvases: Seq[Canvas] = Seq.empty
 
-//  val bot = Bot(action)
-//  bot.joinGame
   println("Joining")
   println("join = " + interactor.join())
   println("start = " + interactor.start(10, 10, 10, 10))
   println("Started")
   println("exec command = " + interactor.command(makeList(0, 0)))
-
-  println((System.currentTimeMillis() - start) / 1000)
 
   // ToDo async show
   //  Renderer.show(canvases.map(_.toCanvas))(action)
