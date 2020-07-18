@@ -5,12 +5,11 @@ import java.awt.{BorderLayout, Color, Dimension, Graphics}
 import java.awt.image.BufferedImage
 
 import icfpc.classified.GraphicsUtils
-import icfpc.classified.Renderer.{renderSeq, MyPlane}
 import javax.swing.{JFrame, JPanel}
 
 object ShapeCreator extends App {
-  val width = 3
-  val height = 3
+  val width = 5
+  val height = 5
   val frame = new JFrame("ShapeCreator")
   frame.setLayout(new BorderLayout())
   frame.setVisible(true)

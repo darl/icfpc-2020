@@ -4,13 +4,12 @@ import java.awt.event._
 import java.awt.image.BufferedImage
 import java.awt.{BorderLayout, Color, Dimension, Graphics}
 
-import icfpc.classified.game.{Locator, ShapeReader}
+import icfpc.classified.game.{Locator, Shape, ShapeReader}
 import javax.swing.{JFrame, JPanel}
 
 import scala.util.Random
 
 object Renderer {
-
   case class Rendered(image: BufferedImage, minX: Int, minY: Int, width: Int, height: Int)
 
   def render(canvases: Canvas*): Rendered = renderSeq(canvases)
@@ -53,6 +52,7 @@ object Renderer {
   }
 
   def show(canvases: Seq[Canvas])(onClick: (Int, Int) => Seq[Canvas]): JFrame = {
+    val shipShape: Shape = ShapeReader.read("/ship3.png")
     var rendered = renderSeq(canvases)
 
     val frame = new JFrame("Galaxy");
@@ -73,6 +73,7 @@ object Renderer {
 //        println("BUSY")
         val x = e.getX / plane.scale + rendered.minX
         val y = e.getY / plane.scale + rendered.minY
+        println(s"$x, $y")
         val newCanvases = onClick(x, y)
         savedCanvas = newCanvases.head
         rendered = renderSeq(newCanvases)
@@ -93,7 +94,6 @@ object Renderer {
       plane.repaint()
     })
 
-    val shipShape = ShapeReader.read("/ship1.png")
     frame.addKeyListener(new KeyListener {
       override def keyTyped(e: KeyEvent): Unit = ()
 
