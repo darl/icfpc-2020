@@ -1,7 +1,5 @@
 package icfpc.classified
 
-import java.awt.event.{WindowAdapter, WindowEvent}
-
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -97,32 +95,20 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
     }
 
     "interact GALAXY" in {
-      var state: Expression = null
       val int = Interpreter(
         GalaxyOps.functions,
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
       var state: Expression = Nil
-      var oldState: Expression = pair(0, 0)
-      var rest: Expression = Nil
-      while (state != oldState) {
-        oldState = state
-        val res = int
-          .eval(
-            Interact0(GalaxyOps.Galaxy)(state)(pair(0, 0))
-          )
-          .toPair
-        state = res._1
-        rest = res._2
-        println(state)
-//        println(rest)
-      }
-      val lock = new Object
 
-      val canvases = rest.toList.head
+      val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(pair(0, 0)))
+      val (state0, rest) = res.toPair
+      state = state0
+      println(state)
+      val canvases = rest.toList.head.toList.map(_.toCanvas)
 
-      Renderer.show(canvases) { (x, y) =>
-        val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(pair(x, y)))
+      Renderer.show(canvases.map(_.toCanvas)) { (x, y) =>
+        val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(x, y)))
         val (state0, rest) = res.toPair
         state = state0
         println(state)

@@ -27,7 +27,6 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       expression match {
         case app: Apply => doEval(operation(app.op)(app.arg))
         case UnknownVariable(value) =>
-          println(s":$value")
           lib.getOrElse(value, throw new IllegalStateException(s"Can't resolve unknown variable $value"))
         case e => e
       }
