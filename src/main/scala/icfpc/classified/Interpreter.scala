@@ -121,7 +121,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
   private def multipleDraw(expression: Expression): Expression = {
     eval(expression) match {
-      case Cons(head: Cons, tail: Cons) => Cons(Apply(Draw, head), Apply(MultiDraw, tail))
+      case Cons(head: Cons, tail: Expression) => Cons(eval(Apply(Draw, head)), eval(Apply(MultiDraw, tail)))
       case Nil => Nil
       case other => throw new IllegalStateException(s"Can't convert $other to list")
     }

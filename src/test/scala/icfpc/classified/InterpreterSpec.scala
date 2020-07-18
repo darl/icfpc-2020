@@ -74,6 +74,19 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
 
     }
 
+    "Draw" in {
+      eval(Apply(Draw, Nil)) should equal(Canvas(List.empty))
+      eval(Apply(Draw, Cons(Cons(1, 2), Nil))) should equal(Canvas(List(1L -> 2L)))
+      val canvas = eval(Apply(Draw, Cons(Cons(1, 2), Cons(Cons(2,3), Nil))))
+      canvas.isInstanceOf[Canvas] should equal(true)
+      canvas.asInstanceOf[Canvas].points should contain allElementsOf Seq(1L -> 2L, 2L -> 3L)
+    }
+
+    "MultiDraw" in {
+      eval(Apply(MultiDraw, Nil)) should equal(Nil)
+      eval(Apply(MultiDraw, Cons(Cons(Cons(1,2), Nil), Nil))) should equal(Cons(Canvas(List(1L -> 2L)), Nil))
+    }
+
     "eval galaxy" in {
       val int = Interpreter(GalaxyOps.functions, IdentitySignalSender)
 //      val res = int.eval(GalaxyOps.Galaxy)
