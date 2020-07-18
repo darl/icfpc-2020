@@ -1,5 +1,7 @@
 package icfpc.classified
 
+import icfpc.classified.game.Interactor
+
 object Main extends App {
   val start = System.currentTimeMillis()
 
@@ -17,27 +19,26 @@ object Main extends App {
     )
   )
 
+  private val ss = new HttpSignalSender(args(0), "8d26edd4434c42df82127c1640bed928")
+  private val interactor = new Interactor(ss, args(1).toLong)
+
   val interpreter = Interpreter(
     GalaxyOps.functions,
-    new HttpSignalSender(args(0), "8d26edd4434c42df82127c1640bed928")
+    ss
   )
   import interpreter._
 
   var state: Expression = multiplayerState
   var canvases: Seq[Canvas] = Seq.empty
 
-  def action: (Int, Int) => Seq[Canvas] = { (x, y) =>
-    val res = interpreter.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(x, y)))
-    val (state0, rest) = res.toPair
-    state = state0
-    println(state)
-    canvases = rest.toList.head.toList.map(_.toCanvas)
-    canvases
-  }
+//  val bot = Bot(action)
+//  bot.joinGame
+  println("Joining")
+  println("join = " + interactor.join())
+  println("start = " + interactor.start(10, 10, 10, 10))
+  println("Started")
+  println("exec command = " + interactor.command(makeList(0, 0)))
 
-  action(0, 0)
-  val bot = Bot(action)
-  bot.joinGame
   println((System.currentTimeMillis() - start) / 1000)
 
   // ToDo async show
