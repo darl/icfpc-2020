@@ -83,6 +83,6 @@ case class Interact2(protocol: Expression, state: Expression) extends Ast with O
 
 case class FunctionDef(id: Long, expr: Expression) extends Ast
 
-case class Canvas(points: List[(Long, Long)]) extends Expression {
-  def withPoint(point: (Long, Long)): Canvas = this.copy(points :+ point)
+case class Canvas(points: List[(Int, Int)]) extends Expression {
+  def withPoint(point: (Int, Int)): Canvas = this.copy(points :+ point)
 }

@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicLong
 case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
   private val idGen = new AtomicLong()
+
   def exec(expression: Expression): Literal = {
     eval(expression) match {
       case result: Literal => result
@@ -94,8 +95,8 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       case IfZero1(cond) => left => IfZero2(cond, left)
       case IfZero2(cond, left) => right => if (cond) left else right
       case Identity => identity
-      
-      case Draw => args =>drawPoints(eval(args))
+
+      case Draw => args => drawPoints(eval(args))
       case MultiDraw => args => multipleDraw(args)
 
       case Send => arg => send(eval(arg))
@@ -109,11 +110,11 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
     points match {
       case Nil => Canvas(List.empty)
       case Cons(Cons(Literal(x), Literal(y)), tail) =>
-        drawPoints(tail).withPoint(x -> y)
+        drawPoints(tail).withPoint(x.toInt -> y.toInt)
       case other => throw new IllegalStateException(s"Can't convert $other to list of 2d points")
     }
   }
-    
+
   // just to ensure that expression is serializable
   private def modem(ex: Expression): Expression = {
     val mod = Modulator.modulate(eval(ex))
