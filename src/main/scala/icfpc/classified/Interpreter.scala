@@ -2,7 +2,10 @@ package icfpc.classified
 
 import java.util.concurrent.atomic.AtomicLong
 
+import scala.collection.mutable
+
 case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
+  val cache = new mutable.HashMap[Expression, Expression]()
 
   private val idGen = new AtomicLong()
 
@@ -15,12 +18,16 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
     }
   }
 
-  private[classified] def eval(expression: Expression): Expression = {
+  def eval(expression: Expression): Expression = {
+    val cached = cache.get(expression)
+    if (cached.nonEmpty) return cached.get
+
     @scala.annotation.tailrec
     def doEval(expression: Expression): Expression =
       expression match {
         case app: Apply => doEval(operation(app.op)(app.arg))
         case UnknownVariable(value) =>
+          println(s":$value")
           lib.getOrElse(value, throw new IllegalStateException(s"Can't resolve unknown variable $value"))
         case e => e
       }
@@ -35,6 +42,7 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
       result = doEval(result)
 //      println(s"Result($id) = " + result)
     }
+    cache.put(expression, result)
     result
   }
 
@@ -131,9 +139,9 @@ case class Interpreter(lib: Map[Long, Expression], sender: SignalSender) {
 
   private def send(data: Expression): Expression = {
     val signal = Modulator.modulate(eval(data))
-//    println("Sending " + signal)
+    println("Sending " + signal)
     val result = sender.send(signal)
-//    println("Received " + result)
+    println("Received " + result)
     Demodulator.demodulate(result)
   }
 

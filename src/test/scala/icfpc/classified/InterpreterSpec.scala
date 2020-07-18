@@ -102,13 +102,24 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         GalaxyOps.functions,
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
-      val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(pair(0, 0)))
+      var state: Expression = Nil
+      var oldState: Expression = pair(0, 0)
+      var rest: Expression = Nil
+      while (state != oldState) {
+        oldState = state
+        val res = int
+          .eval(
+            Interact0(GalaxyOps.Galaxy)(state)(pair(0, 0))
+          )
+          .toPair
+        state = res._1
+        rest = res._2
+        println(state)
+//        println(rest)
+      }
+      val lock = new Object
 
-
-      val (state0, rest) = res.toPair
-      state = state0
-      println(state)
-      val canvases = rest.toList.head.toList.map(_.toCanvas)
+      val canvases = rest.toList.head
 
       Renderer.show(canvases) { (x, y) =>
         val res = int.eval(Interact0(GalaxyOps.Galaxy)(Nil)(pair(x, y)))

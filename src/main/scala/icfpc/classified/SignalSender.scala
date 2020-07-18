@@ -38,3 +38,9 @@ class HttpSignalSender(serverUrl: String, apiKey: String) extends SignalSender {
 object IdentitySignalSender extends SignalSender {
   override def send(signal: String): String = signal
 }
+
+object SignalSender {
+
+  val live: HttpSignalSender =
+    new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
+}
