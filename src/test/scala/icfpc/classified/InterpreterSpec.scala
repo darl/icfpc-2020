@@ -100,7 +100,7 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         GalaxyOps.functions,
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
-      var state: Expression = tutorStart
+      var state: Expression = multiplayer
 
       val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(0, 0)))
       val (state0, rest) = res.toPair
@@ -124,4 +124,14 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
       Cons(Cons(Literal(1), Cons(Literal(-1), Nil)), Cons(Literal(0), Cons(Nil, Nil)))
     )
 
+  val multiplayer = Cons(
+    Literal(5),
+    Cons(
+      Cons(
+        Literal(2),
+        Cons(Literal(0), Cons(Nil, Cons(Nil, Cons(Nil, Cons(Nil, Cons(Nil, Cons(Literal(49870), Nil)))))))
+      ),
+      Cons(Literal(9), Cons(Nil, Nil))
+    )
+  )
 }
