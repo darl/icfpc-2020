@@ -10,8 +10,11 @@ class BotLogic {
       else Actions.empty
 
     val fire =
-      if (state.me.heat <= 32) Actions.fire(state.enemy.position + state.enemy.speed)
-      else Actions.empty
+      if (state.me.heat <= 32) {
+        val g = state.enemy.position.normalize.!
+        val fireDirection = state.enemy.position + state.enemy.speed + g
+        Actions.fire(fireDirection.round)
+      } else Actions.empty
 
     move |+| fire
   }
