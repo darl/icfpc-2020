@@ -8,11 +8,20 @@ case class WorldState(
     status: Status,
     attacker: Actor,
     defender: Actor,
+    adds: List[Actor],
     isDefence: Boolean,
     moveNumber: Int,
     debug: Option[Any] = None) {
   def me: Actor = if (isDefence) defender else attacker
   def enemy: Actor = if (isDefence) attacker else defender
+
+  def allMyShips: List[Actor] =
+    if (isDefence) defender :: adds.filter(_.isDefender)
+    else attacker :: adds.filterNot(_.isDefender)
+
+  def allEnemyShips: List[Actor] =
+    if (isDefence) attacker :: adds.filterNot(_.isDefender)
+    else defender :: adds.filter(_.isDefender)
 
   def center: Vector = Vector(0, 0)
 
@@ -49,10 +58,11 @@ object WorldState {
     val actors = state(2).toList
     val defender = Actor.from(actors(0))
     val attacker = Actor.from(actors(1))
+    val adds = actors.drop(2).map(Actor.from)
 
     val moveNumber = state.head.toLiteral.value.toInt
 
     val debug = (attacker.position - defender.position).length
-    WorldState(status, attacker, defender, isDefence, moveNumber, debug = Some(debug))
+    WorldState(status, attacker, defender, adds, isDefence, moveNumber, debug = Some(debug))
   }
 }

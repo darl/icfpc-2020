@@ -85,10 +85,14 @@ object Actor {
       Drove(pair._1.toLiteral.value.toInt, pair._2.toLiteral.value.toInt)
     }
 
-    val detonated = data.find(_.head == Literal(1)).map { d =>
+    val detonated = data.find(_.head == Literal(1)).map { _ =>
       Detonated
     }
 
-    List(fired, drove, detonated).flatten
+    val splitted = data.find(_.head == Literal(3)).map { _ =>
+      Splitted
+    }
+
+    List(fired, drove, detonated, splitted).flatten
   }
 }

@@ -57,6 +57,8 @@ object Actions {
 
   val detonate: Actions = Actions(detonate = Some(Detonate()))
 
+  def split(stats: Stats): Actions = Actions(split = Some(Split(stats)))
+
   def moveDirection(direction: Vector): Actions = {
     drive(direction * -1)
   }
