@@ -7,6 +7,7 @@ class Interactor(signalSender: SignalSender, playerKey: Long) {
   private def sendReceive(exp: Expression): Expression = {
     val expression = Modulator.modulate(exp)
     val res = signalSender.send(expression)
+    println(s"response: $res")
     Demodulator.demodulate(res)
   }
 

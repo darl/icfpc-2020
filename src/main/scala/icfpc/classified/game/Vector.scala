@@ -1,6 +1,6 @@
 package icfpc.classified.game
 
-case class Vector(x: Long, y: Long) {
+case class Vector(x: Int, y: Int) {
   def +(other: Vector): Vector = Vector(x + other.x, y + other.y)
 
   def *(v: Double) = Vector((x * v).toLong, (y * v).toLong)

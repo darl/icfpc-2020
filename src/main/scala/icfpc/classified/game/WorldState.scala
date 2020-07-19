@@ -35,12 +35,12 @@ object WorldState {
     val attackerSpeed = attacker.head.toList(3).toPair
     val attackerCompiled = Actor(
       position = Vector(
-        x = attackerPos._1.toLiteral.value.toLong,
-        y = attackerPos._2.toLiteral.value.toLong
+        x = attackerPos._1.toLiteral.value.toInt,
+        y = attackerPos._2.toLiteral.value.toInt
       ),
       speed = Vector(
-        attackerSpeed._1.toLiteral.value.toLong,
-        attackerSpeed._2.toLiteral.value.toLong
+        attackerSpeed._1.toLiteral.value.toInt,
+        attackerSpeed._2.toLiteral.value.toInt
       ),
       health = 100
     )
@@ -50,12 +50,12 @@ object WorldState {
     val defenderSpeed = attacker.head.toList(3).toPair
     val defenderCompiled = Actor(
       position = Vector(
-        x = defenderPos._1.toLiteral.value.toLong,
-        y = defenderPos._2.toLiteral.value.toLong
+        x = defenderPos._1.toLiteral.value.toInt,
+        y = defenderPos._2.toLiteral.value.toInt
       ),
       speed = Vector(
-        defenderSpeed._1.toLiteral.value.toLong,
-        defenderSpeed._2.toLiteral.value.toLong
+        defenderSpeed._1.toLiteral.value.toInt,
+        defenderSpeed._2.toLiteral.value.toInt
       ),
       health = 100
     )
