@@ -22,6 +22,10 @@ class Trajectory(position: Vector, speed: Vector) {
     Iterator.from(1).take(steps).map(afterStep)
   }
 
+  def isFatalIn(steps: Int): Boolean = {
+    next(steps).exists(_.isFatal)
+  }
+
 }
 
 object Trajectory {
@@ -36,6 +40,10 @@ object Trajectory {
       // workaround antigravity hack
       val newSpeed = if (speed.isZero) Vector.Zero else speed + g
       Position(position + newSpeed, newSpeed)
+    }
+
+    def isFatal: Boolean = {
+      position.x.abs <= 16 && position.y.abs <= 16
     }
   }
 }
