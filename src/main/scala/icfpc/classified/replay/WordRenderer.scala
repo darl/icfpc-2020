@@ -2,7 +2,9 @@ package icfpc.classified.replay
 
 import java.awt.image.BufferedImage
 import java.awt.{BasicStroke, Color, Font}
-import icfpc.classified.game.{Vector, WorldState}
+
+import icfpc.classified.game.{Actions, Vector, WorldState}
+
 import scala.util.{Failure, Success, Try}
 
 object WordRenderer {
@@ -20,10 +22,10 @@ object WordRenderer {
     }
   }
 
-  def render(states: Seq[Try[WorldState]]): Seq[BufferedImage] = {
+  def render(states: Seq[(Try[WorldState], Actions)]): Seq[BufferedImage] = {
     states.map {
-      case Failure(exception) => renderError(exception)
-      case Success(value) => renderWorld(value)
+      case (Failure(exception), _) => renderError(exception)
+      case (Success(value), command) => renderWorld(value, command)
     }
   }
 
@@ -46,7 +48,7 @@ object WordRenderer {
     image
   }
 
-  def renderWorld(state: WorldState): BufferedImage = {
+  def renderWorld(state: WorldState, command: Actions): BufferedImage = {
     val image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB)
     val g = image.createGraphics()
     g.setFont(new Font("Monospaced", Font.PLAIN, 14))
@@ -93,6 +95,10 @@ object WordRenderer {
       g.setStroke(1)
       g.drawLine(dPos.x.toInt, dPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
     }
+
+    //Me
+    g.setColor(Color.GREEN)
+    drawString(g, pprint.apply(command, 20).plainText, 20, 600)
 
     g.dispose()
     image

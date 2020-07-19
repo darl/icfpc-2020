@@ -1,7 +1,8 @@
 package icfpc.classified.game
 
-import icfpc.classified.game.WorldState._
-import icfpc.classified.replay.StateCapture
+import icfpc.classified._
+import WorldState._
+import icfpc.classified.replay.Capture
 import icfpc.classified.syntax.Expression
 
 case class WorldState(status: Status, attacker: Actor, defender: Actor, isDefence: Boolean) {
@@ -25,7 +26,7 @@ object WorldState {
   case object Started extends Status
   case object Finished extends Status
 
-  def parse(response: Expression)(implicit stateCapture: StateCapture): WorldState = {
+  def parse(response: Expression)(implicit stateCapture: Capture[Expression]): WorldState = {
     stateCapture.log(response)
     val responseList = response.toList
     val statusId = responseList(1).toLiteral
@@ -41,8 +42,8 @@ object WorldState {
     val isDefence = settings(1).toLiteral.value.toInt == 1
 
     val actors = state(2).toList
-    val defender = Actor.from(actors.head)
-    val attacker = Actor.from(actors.last)
+    val defender = Actor.from(actors(0))
+    val attacker = Actor.from(actors(1))
 
     WorldState(status, attacker, defender, isDefence)
   }

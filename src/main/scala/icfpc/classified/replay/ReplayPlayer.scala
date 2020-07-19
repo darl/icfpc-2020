@@ -5,15 +5,18 @@ import java.awt.event.{KeyEvent, KeyListener, WindowAdapter, WindowEvent}
 import java.awt.image.BufferedImage
 
 import icfpc.classified.Renderer.MyPlane
-import icfpc.classified.game.WorldState
+import icfpc.classified.game.{Actions, WorldState}
 import javax.swing.JFrame
 
 import scala.util.{Failure, Success, Try}
 
-case class ReplayPlayer(replays: Seq[Try[WorldState]], states: Seq[String] = Seq.empty) {
+case class ReplayPlayer(
+    replays: Seq[Try[WorldState]],
+    commands: Seq[Actions] = Seq.empty,
+    states: Seq[String] = Seq.empty) {
 
   def show(): Unit = {
-    val images: Seq[BufferedImage] = WordRenderer.render(replays)
+    val images: Seq[BufferedImage] = WordRenderer.render(replays.zipAll(commands, null, Actions.empty))
     var current = 0
 
     val title = replays.last match {

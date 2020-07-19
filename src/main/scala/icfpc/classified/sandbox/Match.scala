@@ -1,8 +1,9 @@
 package icfpc.classified.sandbox
 
-import icfpc.classified.replay.{ReplayParser, ReplayPlayer, StateCapture}
+import icfpc.classified.game.Actions
+import icfpc.classified.replay.{Capture, ReplayParser, ReplayPlayer}
 import icfpc.classified.{HttpSignalSender, Player}
-import icfpc.classified.syntax.{pair, Demodulator, GalaxyOps, Interact0, Interpreter, Literal}
+import icfpc.classified.syntax.{pair, Demodulator, Expression, GalaxyOps, Interact0, Interpreter, Literal}
 
 object Match extends App {
   val address = "https://icfpc2020-api.testkontur.ru"
@@ -10,37 +11,34 @@ object Match extends App {
   val (defenderId, attackerId) = requestGame()
 
   val t1 = new Thread(() => {
-    val capture = StateCapture.mutable
+    val states = Capture.mutable[Expression]
+    val commands = Capture.mutable[Actions]
     try {
-      Player.play(address, attackerId.value)(capture)
+      Player.play(address, attackerId.value)(states, commands)
     } catch {
       case err: Throwable => err.printStackTrace()
     }
-    val annotations = capture.states.map(s => StateAnnotator.annotate(s))
-    ReplayPlayer(ReplayParser.render(capture.states), annotations).show()
+    val annotations = states.elems.map(s => StateAnnotator.annotate(s))
+    ReplayPlayer(ReplayParser.render(states.elems), commands.elems, annotations).show()
 
   })
 
-//  val capture1 = StateCapture.mutable
-
   val t2 = new Thread(() => {
-    val capture = StateCapture.mutable
-
+    val states = Capture.mutable[Expression]
+    val commands = Capture.mutable[Actions]
     try {
-      Player.play(address, defenderId.value)(capture)
+      Player.play(address, defenderId.value)
     } catch {
       case err: Throwable => err.printStackTrace()
     }
-    val annotations = capture.states.map(s => StateAnnotator.annotate(s))
-    ReplayPlayer(ReplayParser.render(capture.states), annotations).show()
+    val annotations = states.elems.map(s => StateAnnotator.annotate(s))
+    ReplayPlayer(ReplayParser.render(states.elems), commands.elems, annotations).show()
 
   })
   t1.start()
   t2.start()
   t1.join()
   t2.join()
-
-//  println(StateAnnotator.annotate(capture1.states.last))
 
   def requestGame(): (Literal, Literal) = {
     val requestState = Demodulator.demodulate(
