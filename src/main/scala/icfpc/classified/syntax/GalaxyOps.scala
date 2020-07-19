@@ -1,4 +1,4 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
 import scala.io.Source
 

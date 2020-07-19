@@ -1,4 +1,4 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
 object Parser {
 
@@ -52,6 +52,5 @@ object Parser {
         }
     }
   }
-
 
 }

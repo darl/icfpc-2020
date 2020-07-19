@@ -1,4 +1,4 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
 import scala.collection.mutable
 
@@ -27,7 +27,7 @@ object Modulator {
 
     val binaryValue = value.abs.toString(2)
     val addZeros =
-      if (binaryValue.length % 4 == 0) 0
+      if (binaryValue.length      % 4 == 0) 0
       else 4 - binaryValue.length % 4
     val encodedValue =
       if (value == 0) ""

@@ -3,6 +3,8 @@ package icfpc.classified
 import java.awt.event._
 import java.awt.image.BufferedImage
 import java.awt.{BorderLayout, Color, Dimension, Graphics}
+
+import icfpc.classified.syntax.Canvas
 import javax.swing.{JFrame, JPanel}
 
 import scala.util.Random
@@ -70,6 +72,7 @@ object Renderer {
 //        println("BUSY")
         val x = e.getX / plane.scale + rendered.minX
         val y = e.getY / plane.scale + rendered.minY
+        println(s"$x $y")
         val newCanvases = onClick(x, y)
         savedCanvas = newCanvases.head
         rendered = renderSeq(newCanvases)

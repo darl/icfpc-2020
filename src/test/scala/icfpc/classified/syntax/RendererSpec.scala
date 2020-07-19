@@ -1,5 +1,6 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
+import icfpc.classified.Renderer
 import org.scalatest.wordspec.AnyWordSpec
 
 class RendererSpec extends AnyWordSpec {

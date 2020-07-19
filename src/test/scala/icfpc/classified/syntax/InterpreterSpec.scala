@@ -1,5 +1,7 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
+import icfpc.classified.sandbox.StateAnnotator
+import icfpc.classified.{HttpSignalSender, IdentitySignalSender, Renderer}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -86,10 +88,12 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
 
     "MultiDraw" in {
       eval(Apply(MultiDraw, Nil)) should equal(Nil)
-      eval(Apply(MultiDraw, Cons(Cons(Cons(1, 2), Nil), Nil))) should equal(Cons(Canvas(List(1 -> 2)), Nil))
+      eval(Apply(MultiDraw, Cons(Cons(Cons(1, 2), Nil), Nil))) should equal(
+        Cons(Canvas(List(1 -> 2)), Nil)
+      )
     }
 
-    "eval galaxy" in {
+    "eval galaxy.txt" in {
       val int = Interpreter(GalaxyOps.functions, IdentitySignalSender)
       println(int.eval(GalaxyOps.Galaxy(Nil)(pair(0, 0))))
     }
@@ -99,7 +103,7 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         GalaxyOps.functions,
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
-      var state: Expression = multiplayer
+      var state: Expression = tutorStart
 //      var state: Expression = Nil
 
       val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(0, 0)))
@@ -112,7 +116,19 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(x, y)))
         val (state0, rest) = res.toPair
         state = state0
-        println(state)
+        println("--")
+        try {
+          println(
+            StateAnnotator.annotate(
+              state
+                .toList(1)
+                .toList(9)
+                .toList(2)
+            )
+          )
+        } catch {
+          case ignored: Throwable => ()
+        }
 
         rest.toList.head.toList.map(_.toCanvas)
       }
@@ -130,7 +146,13 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
     Cons(
       Cons(
         Literal(2),
-        Cons(Literal(0), Cons(Nil, Cons(Nil, Cons(Nil, Cons(Nil, Cons(Nil, Cons(Literal(49870), Nil)))))))
+        Cons(
+          Literal(0),
+          Cons(
+            Nil,
+            Cons(Nil, Cons(Nil, Cons(Nil, Cons(Nil, Cons(Literal(49870), Nil)))))
+          )
+        )
       ),
       Cons(Literal(9), Cons(Nil, Nil))
     )

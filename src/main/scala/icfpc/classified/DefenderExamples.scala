@@ -1,5 +1,7 @@
 package icfpc.classified
 
+import icfpc.classified.syntax.Literal
+
 object DefenderExamples {
   List(
     Literal(1),
@@ -9,7 +11,7 @@ object DefenderExamples {
       Literal(1),
       List(Literal(448), Literal(1), Literal(64)),
       List(Literal(16), Literal(128)),
-      Nil
+      syntax.Nil
     ),
     List(
       Literal(0),
@@ -26,7 +28,7 @@ object DefenderExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         ),
         List(
           List(
@@ -39,7 +41,7 @@ object DefenderExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         )
       )
     )
@@ -53,7 +55,7 @@ object DefenderExamples {
       Literal(1),
       List(Literal(448), Literal(1), Literal(64)),
       List(Literal(16), Literal(128)),
-      Nil
+      syntax.Nil
     ),
     List(
       Literal(0),
@@ -70,7 +72,7 @@ object DefenderExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         ),
         List(
           List(
@@ -83,7 +85,7 @@ object DefenderExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         )
       )
     )

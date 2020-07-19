@@ -1,7 +1,8 @@
 package icfpc.classified.game
 
 import Actions._
-import icfpc.classified._
+import icfpc.classified.syntax._
+import icfpc.classified.syntax.Expression
 
 case class Actions(
     drive: Option[Drive] = None,
@@ -22,10 +23,10 @@ case class Actions(
       .filter(_.nonEmpty)
       .mkString("[", ", ", "]")
 
-  def serialize: Expression = {
+  def serialize(state: WorldState): Expression = {
     var commands: List[Expression] = List.empty
     drive.foreach { drive =>
-      commands = drive.serialize :: commands
+      commands = drive.serialize(state) :: commands
     }
     sit.foreach { sit =>
       if (sit) {
@@ -33,7 +34,7 @@ case class Actions(
       }
     }
     fire.foreach { fire =>
-      commands = fire.serialize :: commands
+      commands = fire.serialize(state) :: commands
     }
 
     makeList(commands: _*)
@@ -46,8 +47,13 @@ object Actions {
   def fire(coordinates: Vector): Actions = Actions(None, Some(Fire(coordinates)), None)
 
   def drive(direction: Vector): Actions = {
-    val norm = direction.norm
-    Actions(drive = Some(Drive(norm.y, norm.x)))
+    val normX = direction.x.max(-1).min(1).toInt
+    val normY = direction.y.max(-1).min(1).toInt
+    Actions(drive = Some(Drive(normX, normY)))
+  }
+
+  def moveDirection(direction: Vector): Actions = {
+    drive(direction * -1)
   }
 
   case class Drive(horizontal: Int, vertical: Int) {
@@ -58,7 +64,8 @@ object Actions {
         vertical = vertical + other.vertical
       )
 
-    def serialize: Expression = makeList(0, 0, pair(horizontal, vertical))
+    def serialize(state: WorldState): Expression =
+      makeList(0, if (state.isDefence) 0 else 1, pair(horizontal, vertical))
   }
 
   object Drive {
@@ -70,9 +77,8 @@ object Actions {
 
   case class Fire(coordinates: Vector) {
 
-    def serialize: Expression = {
-      makeList(2, 0, pair(coordinates.x, coordinates.y), 86)
+    def serialize(state: WorldState): Expression = {
+      makeList(2, if (state.isDefence) 0 else 1, pair(coordinates.x.toInt, coordinates.y.toInt), 86)
     }
   }
-
 }

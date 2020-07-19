@@ -1,5 +1,7 @@
 package icfpc.classified
 
+import icfpc.classified.syntax.Literal
+
 object AttackerExamples {
   List(
     Literal(1),
@@ -19,27 +21,27 @@ object AttackerExamples {
           List(
             Literal(1),
             Literal(0),
-            List(Literal(-48), Literal(36)),
+            List(Literal(-48), Literal(36)), // coordinates
             List(Literal(0), Literal(0)),
             List(Literal(1), Literal(2), Literal(3), Literal(4)),
             Literal(0),
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         ),
         List(
           List(
             Literal(0),
             Literal(1),
-            List(Literal(48), Literal(-36)),
+            List(Literal(48), Literal(-36)), // coordinates
             List(Literal(0), Literal(0)),
             List(Literal(10), Literal(10), Literal(10), Literal(10)),
             Literal(0),
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         )
       )
     )
@@ -70,7 +72,7 @@ object AttackerExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         ),
         List(
           List(
@@ -83,7 +85,7 @@ object AttackerExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         )
       )
     )
