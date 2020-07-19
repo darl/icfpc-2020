@@ -1,16 +1,18 @@
 package icfpc.classified.game
 
 import Actions._
+import icfpc.classified.game.Actor.Stats
 import icfpc.classified.syntax._
 import icfpc.classified.syntax.Expression
 
 case class Actions(
     drive: Option[Drive] = None,
     fire: Option[Fire] = None,
-    sit: Option[Boolean] = None) {
+    detonate: Option[Detonate] = None,
+    split: Option[Split] = None) {
 
   def |+|(other: Actions): Actions = {
-    Actions(other.drive.orElse(drive), other.fire.orElse(fire), other.sit.orElse(sit))
+    Actions(other.drive.orElse(drive), other.fire.orElse(fire), other.detonate.orElse(detonate))
   }
 
   override def toString: String =
@@ -28,13 +30,14 @@ case class Actions(
     drive.foreach { drive =>
       commands = drive.serialize(state) :: commands
     }
-    sit.foreach { sit =>
-      if (sit) {
-        commands = makeList(1, 0) :: commands
-      }
+    detonate.foreach { detonate =>
+      commands = detonate.serialize(state) :: commands
     }
     fire.foreach { fire =>
       commands = fire.serialize(state) :: commands
+    }
+    split.foreach { split =>
+      commands = split.serialize(state) :: commands
     }
 
     makeList(commands: _*)
@@ -79,6 +82,20 @@ object Actions {
 
     def serialize(state: WorldState): Expression = {
       makeList(2, if (state.isDefence) 0 else 1, pair(coordinates.x.toInt, coordinates.y.toInt), 86)
+    }
+  }
+
+  case class Detonate() {
+
+    def serialize(state: WorldState): Expression = {
+      makeList(1, if (state.isDefence) 0 else 1)
+    }
+  }
+
+  case class Split(stats: Stats) {
+
+    def serialize(state: WorldState): Expression = {
+      makeList(3, if (state.isDefence) 0 else 1, stats.asList)
     }
   }
 }

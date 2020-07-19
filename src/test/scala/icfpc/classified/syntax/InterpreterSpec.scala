@@ -105,7 +105,7 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
       )
 //      var state: Expression = enterPlayerKey(206919795632185305L)
 //      var state: Expression = tutorStart
-      var state: Expression = multiplayer
+      var state: Expression = enterTutorLevel(10, int)
 //      var state: Expression = Nil
 
       val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(0, 0)))
@@ -177,4 +177,30 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
       Cons(Literal(9),Cons(Nil,Nil))
     )
   )
+
+  def enterTutorLevel(level: Int, int: Interpreter) = {
+    val startState: Expression = multiplayer
+    var res = int.eval(Interact0(GalaxyOps.Galaxy)(startState)(pair(0, 0)))
+    val (state, _) = res.toPair
+    res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(17, 1)))
+    val (firstLevel, _) = res.toPair
+    val anyLevel =
+      Cons(
+        firstLevel.toPair._1,
+        Cons(
+          Cons(
+            Literal(level - 1),
+            firstLevel.toPair._2.toPair._1.toPair._2
+          ),
+          firstLevel.toPair._2.toPair._2
+        )
+      )
+    var resultState: Expression = anyLevel
+    1 to 8 foreach { i =>
+      resultState = int.eval(Interact0(GalaxyOps.Galaxy)(resultState)(pair(0, 0))).toPair._1
+    }
+    resultState
+  }
+
+  val c = Cons(Literal(6),Cons(Cons(Literal(9),Cons(Literal(8),Cons(Literal(8200354980347707928L),Cons(Literal(1),Cons(Literal(0),Cons(Literal(0),Cons(Nil,Cons(Nil,Cons(Literal(4),Cons(Cons(Literal(0),Cons(Nil,Cons(Cons(Cons(Cons(Literal(1),Cons(Literal(0),Cons(Cons(Literal(16),Literal(0)),Cons(Cons(Literal(1),Literal(0)),Cons(Cons(Literal(0),Cons(Literal(0),Cons(Literal(0),Cons(Literal(1),Nil)))),Cons(Literal(0),Cons(Literal(64),Cons(Literal(1),Nil)))))))),Cons(Nil,Nil)),Nil),Nil))),Cons(Cons(Literal(8),Cons(Literal(1),Cons(Cons(Literal(448),Cons(Literal(1),Cons(Literal(64),Nil))),Cons(Nil,Cons(Nil,Nil))))),Cons(Nil,Cons(Nil,Nil))))))))))))),Cons(Literal(9),Cons(Nil,Nil))))
 }
