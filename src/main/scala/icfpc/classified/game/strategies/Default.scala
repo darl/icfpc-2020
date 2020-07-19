@@ -1,6 +1,11 @@
-package icfpc.classified.game
+package icfpc.classified.game.strategies
 
-class BotLogic {
+import icfpc.classified.game.Actor.Stats
+import icfpc.classified.game.{Actions, WorldState}
+
+object Default extends Strategy {
+
+  def stats: Stats = Stats(254, 10, 8, 1)
 
   def run(state: WorldState): Actions = {
     val targetSpeed = state.me.position.normal.widthLength(7)

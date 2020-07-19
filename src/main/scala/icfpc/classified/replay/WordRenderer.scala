@@ -1,7 +1,7 @@
 package icfpc.classified.replay
 
 import java.awt.image.BufferedImage
-import java.awt.{BasicStroke, Color, Font, Graphics, Graphics2D}
+import java.awt.{BasicStroke, Color, Font, Graphics2D}
 
 import icfpc.classified.game.{Actions, Actor, Drove, Fired, Vector, WorldState}
 
@@ -106,6 +106,7 @@ object WordRenderer {
     //Me
     g.setColor(Color.GREEN)
     drawString(g, pprint.apply(command, 20).plainText, 20, 900)
+    drawString(g, pprint.apply(state.debug, 20).plainText, 900, 900)
 
     g.dispose()
     image
