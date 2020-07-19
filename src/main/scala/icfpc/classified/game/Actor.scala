@@ -18,6 +18,7 @@ case class Actor(
 
   val driveCost: Int = (stats.might / 8d).ceil.toInt
   val fireCost: Int = stats.might - stats.cooling
+  val maxFirePower: Int = 64 - heat + stats.cooling
 
   val canDrive: Boolean = heat + driveCost < 64
   val canFire: Boolean = heat + fireCost < 64
