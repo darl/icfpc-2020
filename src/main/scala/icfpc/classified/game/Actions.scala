@@ -55,6 +55,8 @@ object Actions {
     Actions(drive = Some(Drive(normX, normY)))
   }
 
+  val detonate: Actions = Actions(detonate = Some(Detonate()))
+
   def moveDirection(direction: Vector): Actions = {
     drive(direction * -1)
   }

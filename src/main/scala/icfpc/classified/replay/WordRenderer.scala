@@ -3,7 +3,7 @@ package icfpc.classified.replay
 import java.awt.image.BufferedImage
 import java.awt.{BasicStroke, Color, Font, Graphics2D}
 
-import icfpc.classified.game.{Actions, Actor, Drove, Fired, Vector, WorldState}
+import icfpc.classified.game.{Actions, Actor, Detonated, Drove, Fired, Vector, WorldState}
 
 import scala.util.{Failure, Success, Try}
 
@@ -129,10 +129,16 @@ object WordRenderer {
         val a = (actor.position + (d * 6)).toScreen
         val b = (actor.position + (d * 10)).toScreen
         g.drawLine(a.x.toInt, a.y.toInt, b.x.toInt, b.y.toInt)
+      case Detonated =>
+        val halfSize = (3.5 * scale).toInt
+        g.setColor(WHITE)
+        g.setStroke(4)
+        g.fillRoundRect(aPos.x.toInt - halfSize, aPos.y.toInt - halfSize, halfSize * 2, halfSize * 2, 10, 10)
     }
   }
 
   def drawTrajectory(g: Graphics2D, actor: Actor): Unit = {
+    g.setStroke(1)
     g.setColor(Color.LIGHT_GRAY)
     actor.trajectory.next(10).foldLeft(actor.position) {
       case (a, b) =>
