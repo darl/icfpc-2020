@@ -18,15 +18,19 @@ object Default extends Strategy {
 
     val fire =
       if (state.me.heat <= 24) {
-        val my = state.me.trajectory.next(8)
-        val enemy = state.enemy.trajectory.next(8)
 
-        val future = my.zip(enemy).zipWithIndex.map {
-          case ((me, enemy), idx) => (me.position - enemy.position).length -> idx
+        def predictByDistance: Boolean = {
+          val my = state.me.trajectory.next(8)
+          val enemy = state.enemy.trajectory.next(8)
+
+          val future = my.zip(enemy).zipWithIndex.map {
+            case ((me, enemy), idx) => (me.position - enemy.position).length -> idx
+          }
+
+          val min = future.toVector.sortBy(_._1)
+          min.take(2).exists(_._2 == 0)
         }
-
-        val min = future.toVector.sortBy(_._1)
-        if (min.take(2).exists(_._2 == 0) || state.enemy.heat > 45) {
+        if (state.enemy.heat > 45 || predictByDistance) {
           val fireDirection = state.enemy.trajectory.next.position
           Actions.fire(fireDirection.round)
         } else {
