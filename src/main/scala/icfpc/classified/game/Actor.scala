@@ -11,7 +11,10 @@ case class Actor(
     heat: Int,
     x6: Int,
     x7: Int,
-    performedActions: Seq[PerformedAction])
+    performedActions: Seq[PerformedAction]) {
+
+  lazy val trajectory: Trajectory = new Trajectory(position, speed)
+}
 
 object Actor {
 
