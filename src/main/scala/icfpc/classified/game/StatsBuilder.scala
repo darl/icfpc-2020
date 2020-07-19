@@ -3,7 +3,7 @@ package icfpc.classified.game
 import icfpc.classified.game.Actor.Stats
 
 object StatsBuilder {
-  val maxDefence = 452
+  val maxDefence = 448
   val maxAttack = 506
 
   def build(isDefence: Boolean, stats: Stats): Stats = {
