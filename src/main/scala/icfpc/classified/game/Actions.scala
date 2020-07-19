@@ -4,9 +4,9 @@ import Actions._
 import icfpc.classified._
 
 case class Actions(
-    drive: Option[Drive],
-    fire: Option[Fire],
-    sit: Option[Boolean]) {
+    drive: Option[Drive] = None,
+    fire: Option[Fire] = None,
+    sit: Option[Boolean] = None) {
 
   def |+|(other: Actions): Actions = {
     Actions(other.drive.orElse(drive), other.fire.orElse(fire), other.sit.orElse(sit))
@@ -44,6 +44,11 @@ object Actions {
   def empty: Actions = Actions(None, None, None)
 
   def fire(coordinates: Vector): Actions = Actions(None, Some(Fire(coordinates)), None)
+
+  def drive(direction: Vector): Actions = {
+    val norm = direction.norm
+    Actions(drive = Some(Drive(norm.y.toInt, norm.x.toInt)))
+  }
 
   case class Drive(horizontal: Int, vertical: Int) {
 
