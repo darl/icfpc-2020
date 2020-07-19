@@ -68,7 +68,7 @@ object WordRenderer {
     g.setColor(Color.GREEN)
     drawString(g, pprint.apply(state.attacker, 20).plainText.replace("Actor", "Attacker"), 600, 20)
     g.setStroke(3)
-    if (state.isDefence) g.setColor(Color.RED) else g.setColor(Color.GREEN)
+    if (state.me == state.defender) g.setColor(Color.RED) else g.setColor(Color.GREEN)
     val aPos = state.attacker.position.toScreen
     g.drawLine(aPos.x.toInt, aPos.y.toInt - halfShipSize, aPos.x.toInt - halfShipSize, aPos.y.toInt + halfShipSize)
     g.drawLine((aPos.x.toInt - halfShipSize), aPos.y.toInt + halfShipSize, aPos.x.toInt + halfShipSize, aPos.y.toInt + halfShipSize)

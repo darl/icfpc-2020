@@ -23,10 +23,10 @@ case class Actions(
       .filter(_.nonEmpty)
       .mkString("[", ", ", "]")
 
-  def serialize: Expression = {
+  def serialize(state: WorldState): Expression = {
     var commands: List[Expression] = List.empty
     drive.foreach { drive =>
-      commands = drive.serialize :: commands
+      commands = drive.serialize(state) :: commands
     }
     sit.foreach { sit =>
       if (sit) {
@@ -34,7 +34,7 @@ case class Actions(
       }
     }
     fire.foreach { fire =>
-      commands = fire.serialize :: commands
+      commands = fire.serialize(state) :: commands
     }
 
     makeList(commands: _*)
@@ -64,7 +64,8 @@ object Actions {
         vertical = vertical + other.vertical
       )
 
-    def serialize: Expression = makeList(0, 0, pair(horizontal, vertical))
+    def serialize(state: WorldState): Expression =
+      makeList(0, if (state.isDefence) 0 else 1, pair(horizontal, vertical))
   }
 
   object Drive {
@@ -76,8 +77,8 @@ object Actions {
 
   case class Fire(coordinates: Vector) {
 
-    def serialize: Expression = {
-      makeList(2, 0, pair(coordinates.x.toInt, coordinates.y.toInt), 86)
+    def serialize(state: WorldState): Expression = {
+      makeList(2, if (state.isDefence) 0 else 1, pair(coordinates.x.toInt, coordinates.y.toInt), 86)
     }
   }
 }

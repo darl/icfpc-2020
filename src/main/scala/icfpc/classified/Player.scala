@@ -31,7 +31,7 @@ object Player {
       val actions = bot.run(world)
       commandCapture.log(actions)
       println("actions = " + actions)
-      val commands = actions.serialize
+      val commands = actions.serialize(world)
       println("sending = " + commands)
       state = interactor.command(commands)
       println("commands = " + state)
