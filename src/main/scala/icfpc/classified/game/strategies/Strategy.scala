@@ -4,6 +4,6 @@ import icfpc.classified.game.Actor.Stats
 import icfpc.classified.game.{Actions, WorldState}
 
 trait Strategy {
-  def stats: Stats
+  def stats(isDefence: Boolean): Stats
   def run(state: WorldState): Actions
 }

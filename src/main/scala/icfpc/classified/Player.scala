@@ -23,25 +23,25 @@ object Player {
     val isDefence = state.toList(2).toList(1) == Literal(1)
 
     val strategy = Default
-    val stats = StatsBuilder.build(isDefence, strategy.stats)
+    val stats = StatsBuilder.build(isDefence, strategy.stats(isDefence))
     println(isDefence)
     println(stats)
     state = interactor.start(stats)
     println("start = " + state)
     var world = WorldState.parse(state)
-    println("world = " + world)
+//    println("world = " + world)
 
     println("Started")
     while (world.status == Started) {
       val actions = strategy.run(world)
       commandCapture.log(actions)
-      println("actions = " + actions)
+//      println("actions = " + actions)
       val commands = actions.serialize(world)
-      println("sending = " + commands)
+//      println("sending = " + commands)
       state = interactor.command(commands)
-      println("commands = " + state)
+//      println("commands = " + state)
       world = WorldState.parse(state)
-      println("world = " + world)
+//      println("world = " + world)
     }
 
     println("exec command = " + interactor.command(makeList(0, 0)))

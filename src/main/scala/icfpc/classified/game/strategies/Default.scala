@@ -5,7 +5,9 @@ import icfpc.classified.game.{Actions, WorldState}
 
 object Default extends Strategy {
 
-  def stats: Stats = Stats(90, 35, 16, 7)
+  def stats(isDefence: Boolean): Stats = {
+    Stats(90, if(isDefence) 40 else 54, 14, 7)
+  }
 
   def run(state: WorldState): Actions = {
     val targetSpeed = state.me.position.normal.widthLength(7)
@@ -15,10 +17,21 @@ object Default extends Strategy {
       else Actions.empty
 
     val fire =
-      if (state.me.heat <= 32) {
-        val g = state.enemy.position.normalize.!
-        val fireDirection = state.enemy.position + state.enemy.speed + g
-        Actions.fire(fireDirection.round)
+      if (state.me.heat <= 24) {
+        val my = state.me.trajectory.next(4)
+        val enemy = state.enemy.trajectory.next(4)
+
+        val future = my.zip(enemy).zipWithIndex.map {
+          case ((me, enemy), idx) => (me.position - enemy.position).length -> idx
+        }
+
+        val min = future.toVector.sortBy(_._1)
+        if (min.take(2).exists(_._2 == 0)) {
+          val fireDirection = state.enemy.trajectory.next.position
+          Actions.fire(fireDirection.round)
+        } else {
+          Actions.empty
+        }
       } else Actions.empty
 
     move |+| fire
