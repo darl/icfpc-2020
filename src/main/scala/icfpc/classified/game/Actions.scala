@@ -47,8 +47,13 @@ object Actions {
   def fire(coordinates: Vector): Actions = Actions(None, Some(Fire(coordinates)), None)
 
   def drive(direction: Vector): Actions = {
-    val norm = direction.norm
-    Actions(drive = Some(Drive(-norm.y, -norm.x)))
+    val normX = direction.x.max(-1).min(1).toInt
+    val normY = direction.y.max(-1).min(1).toInt
+    Actions(drive = Some(Drive(normX, normY)))
+  }
+
+  def moveDirection(direction: Vector): Actions = {
+    drive(direction * -1)
   }
 
   case class Drive(horizontal: Int, vertical: Int) {
@@ -72,7 +77,7 @@ object Actions {
   case class Fire(coordinates: Vector) {
 
     def serialize: Expression = {
-      makeList(2, 0, pair(coordinates.x, coordinates.y), 86)
+      makeList(2, 0, pair(coordinates.x.toInt, coordinates.y.toInt), 86)
     }
   }
 }

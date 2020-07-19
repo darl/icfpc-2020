@@ -1,13 +1,22 @@
 package icfpc.classified.game
 
-import icfpc.classified._
-import WorldState._
+import icfpc.classified.game.WorldState._
 import icfpc.classified.replay.StateCapture
 import icfpc.classified.syntax.Expression
 
 case class WorldState(status: Status, attacker: Actor, defender: Actor, isDefence: Boolean) {
   def me: Actor = if (isDefence) defender else attacker
   def enemy: Actor = if (isDefence) attacker else defender
+
+  def center: Vector = Vector(0, 0)
+
+  def blackBox: Array[Vector] =
+    Array(
+      Vector(14, 14),
+      Vector(14, -14),
+      Vector(-14, -14),
+      Vector(-14, 14)
+    )
 }
 
 object WorldState {

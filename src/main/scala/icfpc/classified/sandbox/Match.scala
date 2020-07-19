@@ -21,22 +21,26 @@ object Match extends App {
 
   })
 
-  val capture1 = StateCapture.mutable
+//  val capture1 = StateCapture.mutable
 
   val t2 = new Thread(() => {
+    val capture = StateCapture.mutable
 
     try {
-      Player.play(address, defenderId.value)(capture1)
+      Player.play(address, defenderId.value)(capture)
     } catch {
       case err: Throwable => err.printStackTrace()
     }
+    val annotations = capture.states.map(s => StateAnnotator.annotate(s))
+    ReplayPlayer(ReplayParser.render(capture.states), annotations).show()
+
   })
   t1.start()
   t2.start()
   t1.join()
   t2.join()
 
-  println(StateAnnotator.annotate(capture1.states.last))
+//  println(StateAnnotator.annotate(capture1.states.last))
 
   def requestGame(): (Literal, Literal) = {
     val requestState = Demodulator.demodulate(

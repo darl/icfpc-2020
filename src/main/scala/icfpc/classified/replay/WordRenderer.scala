@@ -60,7 +60,7 @@ object WordRenderer {
     g.setColor(Color.WHITE)
     g.fillOval(size / 2 - 10, size / 2 - 10, 20, 20)
     val topLeft = Vector(-14, -14).toScreen
-    g.drawRect(topLeft.x, topLeft.y, 28 * scale, 28 * scale)
+    g.drawRect(topLeft.x.toInt, topLeft.y.toInt, 28 * scale, 28 * scale)
 
     //Attacker
     g.setColor(Color.GREEN)
@@ -68,15 +68,15 @@ object WordRenderer {
     g.setStroke(3)
     if (state.isDefence) g.setColor(Color.RED) else g.setColor(Color.GREEN)
     val aPos = state.attacker.position.toScreen
-    g.drawLine(aPos.x, aPos.y - halfShipSize, aPos.x - halfShipSize, aPos.y + halfShipSize)
-    g.drawLine(aPos.x - halfShipSize, aPos.y + halfShipSize, aPos.x + halfShipSize, aPos.y + halfShipSize)
-    g.drawLine(aPos.x + halfShipSize, aPos.y + halfShipSize, aPos.x, aPos.y - halfShipSize)
+    g.drawLine(aPos.x.toInt, aPos.y.toInt - halfShipSize, aPos.x.toInt - halfShipSize, aPos.y.toInt + halfShipSize)
+    g.drawLine((aPos.x.toInt - halfShipSize), aPos.y.toInt + halfShipSize, aPos.x.toInt + halfShipSize, aPos.y.toInt + halfShipSize)
+    g.drawLine(aPos.x.toInt + halfShipSize, aPos.y.toInt + halfShipSize, aPos.x.toInt, aPos.y.toInt - halfShipSize)
     val aSpeed = state.attacker.speed
     if (aSpeed.nonZero) {
       val newPos = (state.attacker.position + aSpeed).toScreen
       g.setColor(Color.YELLOW)
       g.setStroke(1)
-      g.drawLine(aPos.x, aPos.y, newPos.x, newPos.y)
+      g.drawLine(aPos.x.toInt, aPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
     }
 
     //Defender
@@ -85,13 +85,13 @@ object WordRenderer {
     g.setStroke(3)
     if (!state.isDefence) g.setColor(Color.RED) else g.setColor(Color.GREEN)
     val dPos = state.defender.position.toScreen
-    g.drawRect(dPos.x - halfShipSize, dPos.y - halfShipSize, halfShipSize * 2, halfShipSize * 2)
+    g.drawRect(dPos.x.toInt - halfShipSize, dPos.y.toInt - halfShipSize, halfShipSize * 2, halfShipSize * 2)
     val dSpeed = state.defender.speed
     if (dSpeed.nonZero) {
       val newPos = (state.defender.position + dSpeed).toScreen
       g.setColor(Color.YELLOW)
       g.setStroke(1)
-      g.drawLine(dPos.x, dPos.y, newPos.x, newPos.y)
+      g.drawLine(dPos.x.toInt, dPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
     }
 
     g.dispose()

@@ -9,8 +9,6 @@ trait SignalSender {
 
 class HttpSignalSender(serverUrl: String, apiKey: String) extends SignalSender {
 
-  private val base = URI.create(serverUrl)
-
   private val client = HttpClient
     .newBuilder()
     .followRedirects(HttpClient.Redirect.ALWAYS)
