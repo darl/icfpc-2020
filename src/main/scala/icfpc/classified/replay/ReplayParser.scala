@@ -7,14 +7,14 @@ import scala.util.{Failure, Success, Try}
 
 object ReplayParser {
 
-  def parseLog(lines: Seq[String]): Seq[Try[WorldState]] = {
+  def parseLog(lines: Seq[String]): (Seq[Try[WorldState]], Seq[Expression]) = {
     val states = lines
       .dropWhile(!_.startsWith("join ="))
       .drop(1)
       .filter(_.startsWith("response:"))
       .map(_.stripPrefix("response: "))
       .map(Demodulator.demodulate)
-    render(states)
+    (render(states), states)
   }
 
   def render(states: Seq[Expression]): Seq[Try[WorldState]] = {
