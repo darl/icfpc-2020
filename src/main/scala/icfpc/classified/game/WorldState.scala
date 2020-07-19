@@ -32,23 +32,31 @@ object WorldState {
     val actors = state(2).toList
     val attacker = actors.last.toList
     val attackerPos = attacker.head.toList(2).toPair
+    val attackerSpeed = attacker.head.toList(3).toPair
     val attackerCompiled = Actor(
       position = Vector(
         x = attackerPos._1.toLiteral.value.toLong,
         y = attackerPos._2.toLiteral.value.toLong
       ),
-      speed = Vector(0, 0),
+      speed = Vector(
+        attackerSpeed._1.toLiteral.value.toLong,
+        attackerSpeed._2.toLiteral.value.toLong
+      ),
       health = 100
     )
 
     val defender = actors.head.toList
     val defenderPos = defender.head.toList(2).toPair
+    val defenderSpeed = attacker.head.toList(3).toPair
     val defenderCompiled = Actor(
       position = Vector(
         x = defenderPos._1.toLiteral.value.toLong,
         y = defenderPos._2.toLiteral.value.toLong
       ),
-      speed = Vector(0, 0),
+      speed = Vector(
+        defenderSpeed._1.toLiteral.value.toLong,
+        defenderSpeed._2.toLiteral.value.toLong
+      ),
       health = 100
     )
 
