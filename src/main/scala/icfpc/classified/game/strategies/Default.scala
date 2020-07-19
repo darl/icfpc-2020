@@ -17,7 +17,7 @@ object Default extends Strategy {
       else Actions.empty
 
     val fire =
-      if (state.me.canFire) {
+      if (state.me.canFire && state.moveNumber > 1) {
 
         def predictByDistance: Boolean = {
           val my = state.me.trajectory.next(8)
