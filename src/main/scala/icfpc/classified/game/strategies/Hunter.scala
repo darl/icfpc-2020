@@ -26,7 +26,7 @@ object Hunter extends Strategy {
       if (state.me.heat <= 32 && (state.me.position - state.enemy.position).length < 30) {
         val g = state.enemy.position.normalize.!
         val fireDirection = state.enemy.position + state.enemy.speed + g
-        Actions.fire(fireDirection.round)
+        Actions.fire(fireDirection.round, state.me.maxFirePower)
       } else Actions.empty
 
     move |+| fire

@@ -36,7 +36,7 @@ object Default extends Strategy {
         }
         if ((state.enemy.heat > 45 && distanceToEnemy < 100) || isNearestPosition) {
           val fireDirection = state.enemy.trajectory.next.position
-          Actions.fire(fireDirection.round, state.me.maxFirePower)
+          Actions.fire(fireDirection.round, state.me.stats.might)
         } else {
           Actions.empty
         }
