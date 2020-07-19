@@ -16,7 +16,11 @@ object Match extends App {
     } catch {
       case err: Throwable => err.printStackTrace()
     }
-    ReplayPlayer(ReplayParser.render(capture.states)).show()
+//    ReplayPlayer(ReplayParser.render(capture.states)).show()
+    capture.states.foreach { state =>
+      Console.println("-----------------------------------")
+      Console.println(StateAnnotator.annotate(state))
+    }
   })
 
   val t2 = new Thread(() => {
