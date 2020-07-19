@@ -20,6 +20,7 @@ object Default extends Strategy {
         Actions.moveDirection(targetForce)
       } else Actions.empty
 
+    val perpDeviation = getFirePerpDeviation(state)
     val fire = if (state.moveNumber > 1) {
       if (state.me.canFire) {
 
@@ -34,14 +35,14 @@ object Default extends Strategy {
           val min = future.toVector.sortBy(_._1)
           min.take(2).exists(_._2 == 0)
         }
-        if ((state.enemy.heat > 45 && distanceToEnemy < 100) || isNearestPosition) {
+        if ((state.enemy.heat > 45 && distanceToEnemy < 100) || isNearestPosition || perpDeviation < 20) {
           val fireDirection = state.enemy.trajectory.next.position
           Actions.fire(fireDirection.round, state.me.maxFirePower)
         } else {
           Actions.empty
         }
       } else {
-        if (state.enemy.heat > 45 && distanceToEnemy < 50) {
+        if (state.enemy.heat > 45 && distanceToEnemy < 50 || perpDeviation < 10 ) {
           Actions.fire(state.enemy.trajectory.next.position, state.me.maxFirePower)
         } else {
           Actions.empty
@@ -52,5 +53,12 @@ object Default extends Strategy {
     }
 
     move |+| fire
+  }
+
+  def getFirePerpDeviation(state: WorldState): Double = {
+    val enemyShipDirection = state.enemy.speed + state.enemy.trajectory.next.speed
+    val fireDirection = state.enemy.position - state.me.position
+    val fireAngle = enemyShipDirection.angleTo(fireDirection)
+    math.abs(90 - fireAngle)
   }
 }

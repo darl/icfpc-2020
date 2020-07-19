@@ -32,6 +32,8 @@ case class Vector(x: Double, y: Double) {
     )
   }
 
+  def angleTo(another: Vector): Double = math.acos((this |*| another) / this.length / another.length) / Math.PI * 180
+
   def isZero: Boolean = x == 0 && y == 0
   def nonZero: Boolean = !isZero
 }
