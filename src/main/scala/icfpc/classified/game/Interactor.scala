@@ -1,6 +1,7 @@
 package icfpc.classified.game
 
 import icfpc.classified._
+import icfpc.classified.game.Actor.Stats
 import icfpc.classified.syntax._
 
 class Interactor(signalSender: SignalSender, playerKey: Long) {
@@ -16,8 +17,8 @@ class Interactor(signalSender: SignalSender, playerKey: Long) {
     sendReceive(makeList(2L, playerKey, Nil))
   }
 
-  def start(supply: Int, n2: Int, n3: Int, n4: Int): Expression = {
-    sendReceive(makeList(3L, playerKey, makeList(supply, n2, n3, n4)))
+  def start(stats: Stats): Expression = {
+    sendReceive(makeList(3L, playerKey, makeList(stats.supply, stats.x, stats.cooling, stats.z)))
   }
 
   def command(commands: Expression): Expression = {

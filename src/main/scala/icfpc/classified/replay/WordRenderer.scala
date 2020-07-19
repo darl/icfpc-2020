@@ -1,14 +1,14 @@
 package icfpc.classified.replay
 
 import java.awt.image.BufferedImage
-import java.awt.{BasicStroke, Color, Font}
+import java.awt.{BasicStroke, Color, Font, Graphics2D}
 
-import icfpc.classified.game.{Actions, Vector, WorldState}
+import icfpc.classified.game.{Actions, Actor, Drove, Fired, Vector, WorldState}
 
 import scala.util.{Failure, Success, Try}
 
 object WordRenderer {
-  val size = 800
+  val size = 1200
   val scale = 4
 
   implicit class RichVector(val vector: Vector) {
@@ -66,12 +66,17 @@ object WordRenderer {
 
     //Attacker
     g.setColor(Color.GREEN)
-    drawString(g, pprint.apply(state.attacker, 20).plainText.replace("Actor", "Attacker"), 600, 20)
+    drawString(g, pprint.apply(state.attacker, 20).plainText.replace("Actor", "Attacker"), 1000, 20)
     g.setStroke(3)
     if (state.me == state.defender) g.setColor(Color.RED) else g.setColor(Color.GREEN)
     val aPos = state.attacker.position.toScreen
     g.drawLine(aPos.x.toInt, aPos.y.toInt - halfShipSize, aPos.x.toInt - halfShipSize, aPos.y.toInt + halfShipSize)
-    g.drawLine((aPos.x.toInt - halfShipSize), aPos.y.toInt + halfShipSize, aPos.x.toInt + halfShipSize, aPos.y.toInt + halfShipSize)
+    g.drawLine(
+      (aPos.x.toInt - halfShipSize),
+      aPos.y.toInt + halfShipSize,
+      aPos.x.toInt + halfShipSize,
+      aPos.y.toInt + halfShipSize
+    )
     g.drawLine(aPos.x.toInt + halfShipSize, aPos.y.toInt + halfShipSize, aPos.x.toInt, aPos.y.toInt - halfShipSize)
     val aSpeed = state.attacker.speed
     if (aSpeed.nonZero) {
@@ -80,6 +85,7 @@ object WordRenderer {
       g.setStroke(1)
       g.drawLine(aPos.x.toInt, aPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
     }
+    drawActions(g, state.attacker)
 
     //Defender
     g.setColor(Color.GREEN)
@@ -95,13 +101,33 @@ object WordRenderer {
       g.setStroke(1)
       g.drawLine(dPos.x.toInt, dPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
     }
+    drawActions(g, state.defender)
 
     //Me
     g.setColor(Color.GREEN)
-    drawString(g, pprint.apply(command, 20).plainText, 20, 600)
+    drawString(g, pprint.apply(command, 20).plainText, 20, 900)
+    drawString(g, pprint.apply(state.debug, 20).plainText, 900, 900)
 
     g.dispose()
     image
+  }
+
+  private def drawActions(g: Graphics2D, actor: Actor): Unit = {
+    import Color._
+    val aPos = actor.position.toScreen
+    actor.performedActions.foreach {
+      case Fired(target, x1, x2, x3) =>
+        g.setColor(new Color(MAGENTA.getRed, MAGENTA.getGreen, MAGENTA.getBlue, 128))
+        val targetPos = target.toScreen
+        g.drawLine(aPos.x.toInt, aPos.y.toInt, targetPos.x.toInt, targetPos.y.toInt)
+      case Drove(horizontal, vertical) =>
+        g.setColor(CYAN)
+        g.setStroke(2)
+        val d = Vector(horizontal, vertical)
+        val a = (actor.position + (d * 6)).toScreen
+        val b = (actor.position + (d * 10)).toScreen
+        g.drawLine(a.x.toInt, a.y.toInt, b.x.toInt, b.y.toInt)
+    }
   }
 
   import java.awt.Graphics
