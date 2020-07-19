@@ -15,7 +15,7 @@ case class Actor(
 
 object Actor {
 
-  case class Stats(supply: Int, x: Int, y: Int, z: Int)
+  case class Stats(supply: Int, x: Int, cooling: Int, z: Int)
 
   def from(exception: Expression): Actor = {
     val actor = exception.toList

@@ -9,7 +9,8 @@ case class WorldState(
     attacker: Actor,
     defender: Actor,
     isDefence: Boolean,
-    moveNumber: Int) {
+    moveNumber: Int,
+    debug: Option[Any] = None) {
   def me: Actor = if (isDefence) defender else attacker
   def enemy: Actor = if (isDefence) attacker else defender
 
@@ -51,6 +52,7 @@ object WorldState {
 
     val moveNumber = state.head.toLiteral.value.toInt
 
-    WorldState(status, attacker, defender, isDefence, moveNumber)
+    val debug = (attacker.position - defender.position).length
+    WorldState(status, attacker, defender, isDefence, moveNumber, debug = Some(debug))
   }
 }
