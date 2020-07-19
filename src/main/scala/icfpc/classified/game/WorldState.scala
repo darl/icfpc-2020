@@ -15,13 +15,13 @@ case class WorldState(
   def me: Actor = if (isDefence) defender else attacker
   def enemy: Actor = if (isDefence) attacker else defender
 
-  def allMyShips: List[Actor] =
-    if (isDefence) defender :: adds.filter(_.isDefender)
-    else attacker :: adds.filterNot(_.isDefender)
+  def myAdds: List[Actor] =
+    if (isDefence) adds.filter(_.isDefender)
+    else adds.filterNot(_.isDefender)
 
-  def allEnemyShips: List[Actor] =
-    if (isDefence) attacker :: adds.filterNot(_.isDefender)
-    else defender :: adds.filter(_.isDefender)
+  def enemyAdds: List[Actor] =
+    if (isDefence) adds.filterNot(_.isDefender)
+    else adds.filter(_.isDefender)
 
   def center: Vector = Vector(0, 0)
 

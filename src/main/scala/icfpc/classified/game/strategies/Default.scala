@@ -51,6 +51,19 @@ object Default extends Strategy {
       Actions.empty
     }
 
-    move |+| fire
+    val split =
+      if (state.isDefence && state.moveNumber > 15) Actions.split(Stats(0, 0, 0, 1))
+      else Actions.empty
+
+    val addsActions = state.myAdds.zipWithIndex.map { case (add, idx) =>
+
+      val detonate =
+        if (distanceToEnemy < 6) Actions.detonate
+        else Actions.empty
+
+      detonate
+    }.foldLeft(Actions.empty)(_ |+| _)
+
+    move |+| fire |+| split |+| addsActions
   }
 }

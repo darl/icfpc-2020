@@ -19,6 +19,6 @@ object Potato extends Strategy {
         Vector(0, -1)
       }
     }
-    Actions(drive = Some(Actions.Drive(vector.x.toInt, vector.y.toInt)))
+    Actions(drive = List(Actions.Drive(vector.x.toInt, vector.y.toInt)))
   }
 }
