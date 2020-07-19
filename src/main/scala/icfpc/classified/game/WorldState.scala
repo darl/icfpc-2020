@@ -2,9 +2,9 @@ package icfpc.classified.game
 
 import icfpc.classified.game.WorldState._
 import icfpc.classified.replay.Capture
-import icfpc.classified.syntax.Expression
+import icfpc.classified.syntax.{Expression, Literal}
 
-case class WorldState(status: Status, attacker: Actor, defender: Actor, isDefence: Boolean) {
+case class WorldState(status: Status, attacker: Actor, defender: Actor, isDefence: Boolean, moveNumber: Int) {
   def me: Actor = if (isDefence) defender else attacker
   def enemy: Actor = if (isDefence) attacker else defender
 
@@ -44,6 +44,8 @@ object WorldState {
     val defender = Actor.from(actors(0))
     val attacker = Actor.from(actors(1))
 
-    WorldState(status, attacker, defender, isDefence)
+    val moveNumber = state.head.toLiteral.value.toInt
+
+    WorldState(status, attacker, defender, isDefence, moveNumber)
   }
 }
