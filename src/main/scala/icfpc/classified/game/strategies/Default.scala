@@ -6,7 +6,7 @@ import icfpc.classified.game.{Actions, WorldState}
 object Default extends Strategy {
 
   def stats(isDefence: Boolean): Stats = {
-    Stats(90, if(isDefence) 40 else 54, 14, 7)
+    Stats(90, if(isDefence) 49 else 63, 13, 1)
   }
 
   def run(state: WorldState): Actions = {
