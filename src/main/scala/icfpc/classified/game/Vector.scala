@@ -26,18 +26,9 @@ case class Vector(x: Double, y: Double) {
   def normalize: Vector = widthLength(1)
 
   def round: Vector = {
-    def round(v: Double): Double = {
-      val s = v.sign
-      val frac = v.abs - v.abs.floor
-      if (frac >= 0.3d) {
-        s * v.abs.ceil
-      } else {
-        s * v.abs.floor
-      }
-    }
     Vector(
-      round(x),
-      round(y)
+      x.round,
+      y.round
     )
   }
 

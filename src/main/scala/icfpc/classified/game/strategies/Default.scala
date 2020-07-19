@@ -20,8 +20,8 @@ object Default extends Strategy {
         Actions.moveDirection(targetForce)
       } else Actions.empty
 
-    val fire =
-      if (state.me.canFire && state.moveNumber > 1) {
+    val fire = if (state.moveNumber > 1) {
+      if (state.me.canFire) {
 
         def isNearestPosition: Boolean = {
           val my = state.me.trajectory.next(8)
@@ -36,11 +36,20 @@ object Default extends Strategy {
         }
         if ((state.enemy.heat > 45 && distanceToEnemy < 100) || isNearestPosition) {
           val fireDirection = state.enemy.trajectory.next.position
-          Actions.fire(fireDirection.round)
+          Actions.fire(fireDirection.round, state.me.maxFirePower)
         } else {
           Actions.empty
         }
-      } else Actions.empty
+      } else {
+        if (state.enemy.heat > 45 && distanceToEnemy < 50) {
+          Actions.fire(state.enemy.trajectory.next.position, state.me.maxFirePower)
+        } else {
+          Actions.empty
+        }
+      }
+    } else {
+      Actions.empty
+    }
 
     move |+| fire
   }

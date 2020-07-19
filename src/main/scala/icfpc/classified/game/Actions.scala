@@ -47,7 +47,7 @@ case class Actions(
 object Actions {
   def empty: Actions = Actions(None, None, None)
 
-  def fire(coordinates: Vector): Actions = Actions(None, Some(Fire(coordinates)), None)
+  def fire(coordinates: Vector, power: Int): Actions = Actions(None, Some(Fire(coordinates, power)), None)
 
   def drive(direction: Vector): Actions = {
     val normX = direction.x.max(-1).min(1).toInt
@@ -82,10 +82,10 @@ object Actions {
     val left: Drive = Drive(-1, 0)
   }
 
-  case class Fire(coordinates: Vector) {
+  case class Fire(coordinates: Vector, power: Int) {
 
     def serialize(actor: Actor): Expression = {
-      makeList(2, actor.shipId, pair(coordinates.x.toInt, coordinates.y.toInt), 20)
+      makeList(2, actor.shipId, pair(coordinates.x.toInt, coordinates.y.toInt), power)
     }
   }
 
