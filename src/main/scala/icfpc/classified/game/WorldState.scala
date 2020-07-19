@@ -2,9 +2,14 @@ package icfpc.classified.game
 
 import icfpc.classified.game.WorldState._
 import icfpc.classified.replay.Capture
-import icfpc.classified.syntax.{Expression, Literal}
+import icfpc.classified.syntax.Expression
 
-case class WorldState(status: Status, attacker: Actor, defender: Actor, isDefence: Boolean, moveNumber: Int) {
+case class WorldState(
+    status: Status,
+    attacker: Actor,
+    defender: Actor,
+    isDefence: Boolean,
+    moveNumber: Int) {
   def me: Actor = if (isDefence) defender else attacker
   def enemy: Actor = if (isDefence) attacker else defender
 

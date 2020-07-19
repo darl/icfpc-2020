@@ -24,15 +24,15 @@ object Match extends App {
   })
 
   val t2 = new Thread(() => {
-    val states = Capture.mutable[Expression]
-    val commands = Capture.mutable[Actions]
+//    val states = Capture.mutable[Expression]
+//    val commands = Capture.mutable[Actions]
     try {
       Player.play(address, defenderId.value)
     } catch {
       case err: Throwable => err.printStackTrace()
     }
-    val annotations = states.elems.map(s => StateAnnotator.annotate(s))
-    ReplayPlayer(ReplayParser.render(states.elems), commands.elems, annotations).show()
+//    val annotations = states.elems.map(s => StateAnnotator.annotate(s))
+//    ReplayPlayer(ReplayParser.render(states.elems), commands.elems, annotations).show()
 
   })
   t1.start()
