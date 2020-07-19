@@ -29,7 +29,7 @@ object Main extends App {
   var state: Expression = interactor.join()
   println("join = " + state)
 
-  state = interactor.start(10, 10, 10, 10)
+  state = interactor.start(10, 8, 9, 20)
   println("start = " + state)
   var world = WorldState.parse(state)
   println("world = " + world)
