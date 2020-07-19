@@ -2,6 +2,7 @@ package icfpc.classified.game
 
 import icfpc.classified._
 import WorldState._
+import icfpc.classified.replay.StateCapture
 import icfpc.classified.syntax.Expression
 
 case class WorldState(status: Status, attacker: Actor, defender: Actor, isDefence: Boolean) {
@@ -15,7 +16,8 @@ object WorldState {
   case object Started extends Status
   case object Finished extends Status
 
-  def parse(response: Expression): WorldState = {
+  def parse(response: Expression)(implicit stateCapture: StateCapture): WorldState = {
+    stateCapture.log(response)
     val responseList = response.toList
     val statusId = responseList.head.toLiteral
     val settings = responseList(2).toList

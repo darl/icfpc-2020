@@ -16,7 +16,7 @@ case class ReplayPlayer(replays: Seq[Try[WorldState]]) {
     val images: Seq[BufferedImage] = WordRenderer.render(replays)
     var current = 0
 
-    var title = replays.last match {
+    val title = replays.last match {
       case Failure(_) => "Error"
       case Success(_) => "Replay"
     }

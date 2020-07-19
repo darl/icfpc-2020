@@ -1,6 +1,6 @@
 package icfpc.classified.sandbox
 
-import icfpc.classified.replay.ReplayPlayer
+import icfpc.classified.replay.{ReplayParser, ReplayPlayer, StateCapture}
 import icfpc.classified.{HttpSignalSender, Player}
 import icfpc.classified.syntax.{pair, Demodulator, GalaxyOps, Interact0, Interpreter, Literal}
 
@@ -10,12 +10,21 @@ object Match extends App {
   val (attackerId, defenderId) = requestGame()
 
   val t1 = new Thread(() => {
-    val states = Player.play(address, attackerId.value)
-    ReplayPlayer(states).show()
+    val capture = StateCapture.mutable
+    try {
+      Player.play(address, attackerId.value)(capture)
+    } catch {
+      case err: Throwable => err.printStackTrace()
+    }
+    ReplayPlayer(ReplayParser.render(capture.states)).show()
   })
 
   val t2 = new Thread(() => {
-    Player.play(address, defenderId.value)
+    try {
+      Player.play(address, defenderId.value)(StateCapture.noOp)
+    } catch {
+      case err: Throwable => err.printStackTrace()
+    }
   })
   t1.start()
   t2.start()

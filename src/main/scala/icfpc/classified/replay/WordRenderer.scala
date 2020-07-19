@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage
 import java.awt.{BasicStroke, Color, Font}
 import icfpc.classified.game.{Vector, WorldState}
 import scala.util.{Failure, Success, Try}
-import sext.SextAnyTreeString
 
 object WordRenderer {
   val size = 800
@@ -63,7 +62,7 @@ object WordRenderer {
 
     //Attacker
     g.setColor(Color.GREEN)
-    drawString(g, state.attacker.treeString.replace("Actor", "Attacker"), 700, 20)
+    drawString(g, pprint.apply(state.attacker, 20).plainText.replace("Actor", "Attacker"), 600, 20)
     g.setStroke(3)
     if (state.isDefence) g.setColor(Color.RED) else g.setColor(Color.GREEN)
     val aPos = state.attacker.position.toScreen
@@ -80,7 +79,7 @@ object WordRenderer {
 
     //Defender
     g.setColor(Color.GREEN)
-    drawString(g, state.defender.treeString.replace("Actor", "Defender"), 20, 20)
+    drawString(g, pprint.apply(state.defender, 20).plainText.replace("Actor", "Defender"), 20, 20)
     g.setStroke(3)
     if (!state.isDefence) g.setColor(Color.RED) else g.setColor(Color.GREEN)
     val dPos = state.defender.position.toScreen

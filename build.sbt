@@ -2,11 +2,11 @@ name := "icfpc-2020"
 
 version := "0.1"
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.13.3"
 
-libraryDependencies += "org.scalactic"           %% "scalactic" % "3.2.0"
-libraryDependencies += "org.scalatest"           %% "scalatest" % "3.2.0" % "test"
-libraryDependencies += "com.github.nikita-volkov" % "sext"      % "0.2.4"
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.0"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.0" % "test"
+libraryDependencies += "com.lihaoyi"   %% "pprint"    % "0.5.9"
 
 test in assembly := {}
 mainClass in assembly := Some("icfpc.classified.Main")

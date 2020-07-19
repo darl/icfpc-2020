@@ -1,6 +1,7 @@
 package icfpc.classified.game
 
 import icfpc.classified._
+import icfpc.classified.replay.StateCapture
 import icfpc.classified.syntax._
 
 class Interactor(signalSender: SignalSender, playerKey: Long) {
@@ -12,7 +13,7 @@ class Interactor(signalSender: SignalSender, playerKey: Long) {
     Demodulator.demodulate(res)
   }
 
-  def join(): Expression = {
+  def join()(implicit stateCapture: StateCapture): Expression = {
     sendReceive(makeList(2L, playerKey, Nil))
   }
 
