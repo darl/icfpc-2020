@@ -21,7 +21,7 @@ case class ReplayPlayer(
 
     val title = replays.last match {
       case Failure(_) => "Error"
-      case Success(state) => if (state.me.health == 0) "Defeat" else "Victory"
+      case Success(state) => if (state.me.stats.supply == 0) "Defeat" else "Victory"
     }
     val frame = new JFrame(title);
     frame.setLayout(new BorderLayout());
