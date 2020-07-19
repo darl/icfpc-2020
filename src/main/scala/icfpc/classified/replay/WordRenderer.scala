@@ -59,6 +59,8 @@ object WordRenderer {
     //BlackHole
     g.setColor(Color.WHITE)
     g.fillOval(size / 2 - 10, size / 2 - 10, 20, 20)
+    val topLeft = Vector(-14, -14).toScreen
+    g.drawRect(topLeft.x, topLeft.y, 28 * scale, 28 * scale)
 
     //Attacker
     g.setColor(Color.GREEN)

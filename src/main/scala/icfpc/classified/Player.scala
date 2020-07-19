@@ -16,7 +16,8 @@ object Player {
     var state = interactor.join()
     println("join = " + state)
 
-    state = interactor.start(10, 8, 9, 20)
+    // 430 + 4 + 12 + 2 == 448 total
+    state = interactor.start(1, 100, 1, 1)
     println("start = " + state)
     var world = WorldState.parse(state)
     println("world = " + world)

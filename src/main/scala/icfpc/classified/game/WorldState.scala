@@ -19,7 +19,7 @@ object WorldState {
   def parse(response: Expression)(implicit stateCapture: StateCapture): WorldState = {
     stateCapture.log(response)
     val responseList = response.toList
-    val statusId = responseList.head.toLiteral
+    val statusId = responseList(1).toLiteral
     val settings = responseList(2).toList
     val state = responseList(3).toList
 
@@ -32,36 +32,9 @@ object WorldState {
     val isDefence = settings(1).toLiteral.value.toInt == 1
 
     val actors = state(2).toList
-    val attacker = actors.last.toList
-    val attackerPos = attacker.head.toList(2).toPair
-    val attackerSpeed = attacker.head.toList(3).toPair
-    val attackerCompiled = Actor(
-      position = Vector(
-        x = attackerPos._1.toLiteral.value.toInt,
-        y = attackerPos._2.toLiteral.value.toInt
-      ),
-      speed = Vector(
-        attackerSpeed._1.toLiteral.value.toInt,
-        attackerSpeed._2.toLiteral.value.toInt
-      ),
-      health = 100
-    )
+    val defender = Actor.from(actors.head)
+    val attacker = Actor.from(actors.last)
 
-    val defender = actors.head.toList
-    val defenderPos = defender.head.toList(2).toPair
-    val defenderSpeed = attacker.head.toList(3).toPair
-    val defenderCompiled = Actor(
-      position = Vector(
-        x = defenderPos._1.toLiteral.value.toInt,
-        y = defenderPos._2.toLiteral.value.toInt
-      ),
-      speed = Vector(
-        defenderSpeed._1.toLiteral.value.toInt,
-        defenderSpeed._2.toLiteral.value.toInt
-      ),
-      health = 100
-    )
-
-    WorldState(status, attackerCompiled, defenderCompiled, isDefence)
+    WorldState(status, attacker, defender, isDefence)
   }
 }

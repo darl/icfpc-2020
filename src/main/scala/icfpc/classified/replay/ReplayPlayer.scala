@@ -10,7 +10,7 @@ import javax.swing.JFrame
 
 import scala.util.{Failure, Success, Try}
 
-case class ReplayPlayer(replays: Seq[Try[WorldState]]) {
+case class ReplayPlayer(replays: Seq[Try[WorldState]], states: Seq[String] = Seq.empty) {
 
   def show(): Unit = {
     val images: Seq[BufferedImage] = WordRenderer.render(replays)
@@ -18,7 +18,7 @@ case class ReplayPlayer(replays: Seq[Try[WorldState]]) {
 
     val title = replays.last match {
       case Failure(_) => "Error"
-      case Success(_) => "Replay"
+      case Success(state) => if (state.me.health == 0) "Defeat" else "Victory"
     }
     val frame = new JFrame(title);
     frame.setLayout(new BorderLayout());
@@ -30,20 +30,30 @@ case class ReplayPlayer(replays: Seq[Try[WorldState]]) {
       override def keyTyped(e: KeyEvent): Unit = ()
 
       override def keyPressed(e: KeyEvent): Unit = {
-        if (e.getKeyCode == KeyEvent.VK_LEFT && current > 0) {
+        val left = e.getKeyCode == KeyEvent.VK_LEFT && current > 0
+        val right = e.getKeyCode == KeyEvent.VK_RIGHT && current < images.size - 1
+        if (left) {
           current = current - 1
-          plane.image = images(current)
-          plane.repaint()
         }
-        if (e.getKeyCode == KeyEvent.VK_RIGHT && current < images.size - 1) {
+        if (right) {
           current = current + 1
+        }
+        if (left || right) {
           plane.image = images(current)
+          if (states.nonEmpty) {
+            Console.println("-----------------------------------")
+            println(states(current))
+          }
           plane.repaint()
         }
       }
 
       override def keyReleased(e: KeyEvent): Unit = ()
     })
+    if (states.nonEmpty) {
+      Console.println("-----------------------------------")
+      println(states(current))
+    }
     frame.setVisible(true)
     val lock = new Object
     frame.addWindowListener(new WindowAdapter {

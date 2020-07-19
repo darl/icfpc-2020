@@ -1,5 +1,6 @@
 package icfpc.classified.syntax
 
+import icfpc.classified.sandbox.StateAnnotator
 import icfpc.classified.{HttpSignalSender, IdentitySignalSender, Renderer}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -102,7 +103,7 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         GalaxyOps.functions,
         new HttpSignalSender("https://icfpc2020-api.testkontur.ru", "8d26edd4434c42df82127c1640bed928")
       )
-      var state: Expression = multiplayer
+      var state: Expression = tutorStart
 //      var state: Expression = Nil
 
       val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(0, 0)))
@@ -115,7 +116,19 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
         val res = int.eval(Interact0(GalaxyOps.Galaxy)(state)(pair(x, y)))
         val (state0, rest) = res.toPair
         state = state0
-        println(state)
+        println("--")
+        try {
+          println(
+            StateAnnotator.annotate(
+              state
+                .toList(1)
+                .toList(9)
+                .toList(2)
+            )
+          )
+        } catch {
+          case ignored: Throwable => ()
+        }
 
         rest.toList.head.toList.map(_.toCanvas)
       }

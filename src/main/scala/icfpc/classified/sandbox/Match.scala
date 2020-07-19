@@ -7,7 +7,7 @@ import icfpc.classified.syntax.{pair, Demodulator, GalaxyOps, Interact0, Interpr
 object Match extends App {
   val address = "https://icfpc2020-api.testkontur.ru"
 
-  val (attackerId, defenderId) = requestGame()
+  val (defenderId, attackerId) = requestGame()
 
   val t1 = new Thread(() => {
     val capture = StateCapture.mutable
@@ -16,16 +16,17 @@ object Match extends App {
     } catch {
       case err: Throwable => err.printStackTrace()
     }
-//    ReplayPlayer(ReplayParser.render(capture.states)).show()
-    capture.states.foreach { state =>
-      Console.println("-----------------------------------")
-      Console.println(StateAnnotator.annotate(state))
-    }
+    val annotations = capture.states.map(s => StateAnnotator.annotate(s))
+    ReplayPlayer(ReplayParser.render(capture.states), annotations).show()
+
   })
 
+  val capture1 = StateCapture.mutable
+
   val t2 = new Thread(() => {
+
     try {
-      Player.play(address, defenderId.value)(StateCapture.noOp)
+      Player.play(address, defenderId.value)(capture1)
     } catch {
       case err: Throwable => err.printStackTrace()
     }
@@ -34,6 +35,8 @@ object Match extends App {
   t2.start()
   t1.join()
   t2.join()
+
+  println(StateAnnotator.annotate(capture1.states.last))
 
   def requestGame(): (Literal, Literal) = {
     val requestState = Demodulator.demodulate(
@@ -48,4 +51,5 @@ object Match extends App {
     val state = result.toPair._1.toList(1).toList(3).toList(1).toList
     (state(0).toList(1).toLiteral, state(1).toList(1).toLiteral)
   }
+
 }

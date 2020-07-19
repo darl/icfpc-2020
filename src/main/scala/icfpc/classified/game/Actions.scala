@@ -48,7 +48,7 @@ object Actions {
 
   def drive(direction: Vector): Actions = {
     val norm = direction.norm
-    Actions(drive = Some(Drive(norm.y, norm.x)))
+    Actions(drive = Some(Drive(-norm.y, -norm.x)))
   }
 
   case class Drive(horizontal: Int, vertical: Int) {
@@ -75,5 +75,4 @@ object Actions {
       makeList(2, 0, pair(coordinates.x, coordinates.y), 86)
     }
   }
-
 }
