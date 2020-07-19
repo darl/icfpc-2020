@@ -16,8 +16,8 @@ class Interactor(signalSender: SignalSender, playerKey: Long) {
     sendReceive(makeList(2L, playerKey, Nil))
   }
 
-  def start(n1: Int, n2: Int, n3: Int, n4: Int): Expression = {
-    sendReceive(makeList(3L, playerKey, makeList(n1, n2, n3, n4)))
+  def start(supply: Int, n2: Int, n3: Int, n4: Int): Expression = {
+    sendReceive(makeList(3L, playerKey, makeList(supply, n2, n3, n4)))
   }
 
   def command(commands: Expression): Expression = {
