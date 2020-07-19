@@ -31,13 +31,13 @@ case class Actions(
       commands = drive.serialize(state) :: commands
     }
     detonate.foreach { detonate =>
-      commands = detonate.serialize(state) :: commands
+      commands = detonate.serialize(state.me) :: commands
     }
     fire.foreach { fire =>
-      commands = fire.serialize(state) :: commands
+      commands = fire.serialize(state.me) :: commands
     }
     split.foreach { split =>
-      commands = split.serialize(state) :: commands
+      commands = split.serialize(state.me) :: commands
     }
 
     makeList(commands: _*)
@@ -80,22 +80,22 @@ object Actions {
 
   case class Fire(coordinates: Vector) {
 
-    def serialize(state: WorldState): Expression = {
-      makeList(2, if (state.isDefence) 0 else 1, pair(coordinates.x.toInt, coordinates.y.toInt), 86)
+    def serialize(actor: Actor): Expression = {
+      makeList(2, actor.shipId, pair(coordinates.x.toInt, coordinates.y.toInt), 20)
     }
   }
 
   case class Detonate() {
 
-    def serialize(state: WorldState): Expression = {
-      makeList(1, if (state.isDefence) 0 else 1)
+    def serialize(actor: Actor): Expression = {
+      makeList(1, actor.shipId)
     }
   }
 
   case class Split(stats: Stats) {
 
-    def serialize(state: WorldState): Expression = {
-      makeList(3, if (state.isDefence) 0 else 1, stats.asList)
+    def serialize(actor: Actor): Expression = {
+      makeList(3, actor.shipId, stats.asList)
     }
   }
 }
