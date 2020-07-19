@@ -1,7 +1,8 @@
 package icfpc.classified.game
 
 import Actions._
-import icfpc.classified._
+import icfpc.classified.syntax._
+import icfpc.classified.syntax.Expression
 
 case class Actions(
     drive: Option[Drive] = None,

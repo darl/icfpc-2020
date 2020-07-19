@@ -10,4 +10,7 @@ case class Vector(x: Int, y: Int) {
       x.max(-1).min(1),
       y.max(-1).min(1)
     )
+
+  def isZero: Boolean = x == 0 && y == 0
+  def nonZero: Boolean = !isZero
 }

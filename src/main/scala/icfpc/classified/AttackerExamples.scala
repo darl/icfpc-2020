@@ -1,5 +1,7 @@
 package icfpc.classified
 
+import icfpc.classified.syntax.Literal
+
 object AttackerExamples {
   List(
     Literal(1),
@@ -26,7 +28,7 @@ object AttackerExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         ),
         List(
           List(
@@ -39,7 +41,7 @@ object AttackerExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         )
       )
     )
@@ -70,7 +72,7 @@ object AttackerExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         ),
         List(
           List(
@@ -83,7 +85,7 @@ object AttackerExamples {
             Literal(64),
             Literal(1)
           ),
-          Nil
+          syntax.Nil
         )
       )
     )

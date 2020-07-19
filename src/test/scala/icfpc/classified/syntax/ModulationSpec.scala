@@ -1,4 +1,4 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

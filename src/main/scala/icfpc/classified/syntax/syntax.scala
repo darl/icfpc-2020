@@ -1,8 +1,6 @@
-package icfpc
+package icfpc.classified
 
-import scala.language.implicitConversions
-
-package object classified {
+package object syntax {
   implicit def literal(value: Int): Literal = Literal(value)
   implicit def literal(value: Long): Literal = Literal(value)
   implicit def literal(value: BigInt): Literal = Literal(value)

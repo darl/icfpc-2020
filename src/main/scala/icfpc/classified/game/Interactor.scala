@@ -1,6 +1,7 @@
 package icfpc.classified.game
 
 import icfpc.classified._
+import icfpc.classified.syntax._
 
 class Interactor(signalSender: SignalSender, playerKey: Long) {
 

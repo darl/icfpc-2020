@@ -1,5 +1,6 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
+import icfpc.classified.{HttpSignalSender, IdentitySignalSender, Renderer}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -86,10 +87,12 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
 
     "MultiDraw" in {
       eval(Apply(MultiDraw, Nil)) should equal(Nil)
-      eval(Apply(MultiDraw, Cons(Cons(Cons(1, 2), Nil), Nil))) should equal(Cons(Canvas(List(1 -> 2)), Nil))
+      eval(Apply(MultiDraw, Cons(Cons(Cons(1, 2), Nil), Nil))) should equal(
+        Cons(Canvas(List(1 -> 2)), Nil)
+      )
     }
 
-    "eval galaxy" in {
+    "eval galaxy.txt" in {
       val int = Interpreter(GalaxyOps.functions, IdentitySignalSender)
       println(int.eval(GalaxyOps.Galaxy(Nil)(pair(0, 0))))
     }
@@ -130,7 +133,13 @@ class InterpreterSpec extends AnyWordSpec with Matchers {
     Cons(
       Cons(
         Literal(2),
-        Cons(Literal(0), Cons(Nil, Cons(Nil, Cons(Nil, Cons(Nil, Cons(Nil, Cons(Literal(49870), Nil)))))))
+        Cons(
+          Literal(0),
+          Cons(
+            Nil,
+            Cons(Nil, Cons(Nil, Cons(Nil, Cons(Nil, Cons(Literal(49870), Nil)))))
+          )
+        )
       ),
       Cons(Literal(9), Cons(Nil, Nil))
     )

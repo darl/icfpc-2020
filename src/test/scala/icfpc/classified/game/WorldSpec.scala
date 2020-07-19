@@ -1,7 +1,7 @@
 package icfpc.classified.game
 
 import org.scalatest.wordspec.AnyWordSpec
-import icfpc.classified._
+import icfpc.classified.syntax._
 import org.scalatest.matchers.should.Matchers
 
 class WorldSpec extends AnyWordSpec with Matchers {
@@ -62,7 +62,10 @@ class WorldSpec extends AnyWordSpec with Matchers {
                                 Cons(
                                   Cons(Literal(0), Literal(0)),
                                   Cons(
-                                    Cons(Literal(10), Cons(Literal(10), Cons(Literal(10), Cons(Literal(10), Nil)))),
+                                    Cons(
+                                      Literal(10),
+                                      Cons(Literal(10), Cons(Literal(10), Cons(Literal(10), Nil)))
+                                    ),
                                     Cons(Literal(0), Cons(Literal(64), Cons(Literal(1), Nil)))
                                   )
                                 )

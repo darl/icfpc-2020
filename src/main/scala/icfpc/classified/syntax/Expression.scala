@@ -1,4 +1,4 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
 sealed trait Expression
 sealed trait Ast extends Expression

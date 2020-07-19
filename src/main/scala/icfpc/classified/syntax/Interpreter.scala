@@ -1,6 +1,8 @@
-package icfpc.classified
+package icfpc.classified.syntax
 
 import java.util.concurrent.atomic.AtomicLong
+
+import icfpc.classified._
 
 import scala.collection.mutable
 

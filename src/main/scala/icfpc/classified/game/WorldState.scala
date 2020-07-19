@@ -1,8 +1,8 @@
 package icfpc.classified.game
 
 import icfpc.classified._
-
 import WorldState._
+import icfpc.classified.syntax.Expression
 
 case class WorldState(status: Status, attacker: Actor, defender: Actor, isDefence: Boolean) {
   def me: Actor = if (isDefence) defender else attacker
