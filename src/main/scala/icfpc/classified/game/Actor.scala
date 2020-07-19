@@ -11,13 +11,22 @@ case class Actor(
     heat: Int,
     x6: Int,
     x7: Int,
-    performedActions: Seq[PerformedAction])
+    performedActions: Seq[PerformedAction]) {
+
+  lazy val trajectory: Trajectory = new Trajectory(position, speed)
+
+  val driveCost: Int = (stats.might / 8d).ceil.toInt
+  val fireCost: Int = stats.might - stats.cooling
+
+  val canDrive: Boolean = heat + driveCost < 64
+  val canFire: Boolean = heat + fireCost < 64
+}
 
 object Actor {
 
-  case class Stats(supply: Int, x: Int, cooling: Int, z: Int) {
+  case class Stats(supply: Int, might: Int, cooling: Int, z: Int) {
 
-    val asList: Expression = makeList(supply, x, cooling, z)
+    val asList: Expression = makeList(supply, might, cooling, z)
   }
 
   def from(exception: Expression): Actor = {

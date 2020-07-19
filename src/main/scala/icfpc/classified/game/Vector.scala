@@ -7,9 +7,13 @@ case class Vector(x: Double, y: Double) {
   def *(v: Double): Vector = Vector(x * v, y * v)
   def /(v: Double): Vector = Vector(x / v, y / v)
 
+  def |*|(other: Vector): Double = x * other.x + y * other.y
+
   def ! : Vector = this * -1
 
   def length: Double = math.sqrt(x * x + y * y)
+
+  def map(f: Double => Double): Vector = Vector(f(x), f(y))
 
   def widthLength(v: Double): Vector = {
     val len = length
@@ -39,4 +43,8 @@ case class Vector(x: Double, y: Double) {
 
   def isZero: Boolean = x == 0 && y == 0
   def nonZero: Boolean = !isZero
+}
+
+object Vector {
+  val Zero: Vector = Vector(0, 0)
 }

@@ -86,6 +86,7 @@ object WordRenderer {
       g.drawLine(aPos.x.toInt, aPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
     }
     drawActions(g, state.attacker)
+    drawTrajectory(g, state.attacker)
 
     //Defender
     g.setColor(Color.GREEN)
@@ -102,6 +103,7 @@ object WordRenderer {
       g.drawLine(dPos.x.toInt, dPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
     }
     drawActions(g, state.defender)
+    drawTrajectory(g, state.defender)
 
     //Me
     g.setColor(Color.GREEN)
@@ -127,6 +129,17 @@ object WordRenderer {
         val a = (actor.position + (d * 6)).toScreen
         val b = (actor.position + (d * 10)).toScreen
         g.drawLine(a.x.toInt, a.y.toInt, b.x.toInt, b.y.toInt)
+    }
+  }
+
+  def drawTrajectory(g: Graphics2D, actor: Actor): Unit = {
+    g.setColor(Color.LIGHT_GRAY)
+    actor.trajectory.next(10).foldLeft(actor.position) {
+      case (a, b) =>
+        val left = a.toScreen
+        val right = b.position.toScreen
+        g.drawLine(left.x.toInt, left.y.toInt, right.x.toInt, right.y.toInt)
+        b.position
     }
   }
 
