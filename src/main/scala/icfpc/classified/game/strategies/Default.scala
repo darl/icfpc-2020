@@ -26,7 +26,7 @@ object Default extends Strategy {
         }
 
         val min = future.toVector.sortBy(_._1)
-        if (min.take(2).exists(_._2 == 0)) {
+        if (min.take(2).exists(_._2 == 0) || state.enemy.heat > 45) {
           val fireDirection = state.enemy.trajectory.next.position
           Actions.fire(fireDirection.round)
         } else {
