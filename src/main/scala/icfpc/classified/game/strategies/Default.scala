@@ -6,18 +6,18 @@ import icfpc.classified.game.{Actions, WorldState}
 object Default extends Strategy {
 
   def stats(isDefence: Boolean): Stats = {
-    Stats(90, if(isDefence) 49 else 63, 13, 1)
+    Stats(90, if (isDefence) 49 else 63, 13, 1)
   }
 
   def run(state: WorldState): Actions = {
     val targetSpeed = state.me.position.normal.widthLength(7)
     val targetForce = targetSpeed - state.me.speed
     val move =
-      if (state.me.heat < 48 && targetForce.length > 3) Actions.moveDirection(targetForce)
+      if (state.me.canDrive && targetForce.length > 3) Actions.moveDirection(targetForce)
       else Actions.empty
 
     val fire =
-      if (state.me.heat <= 24) {
+      if (state.me.canFire) {
 
         def predictByDistance: Boolean = {
           val my = state.me.trajectory.next(8)
