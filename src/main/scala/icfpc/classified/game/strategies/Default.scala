@@ -5,13 +5,13 @@ import icfpc.classified.game.{Actions, WorldState}
 
 object Default extends Strategy {
 
-  def stats: Stats = Stats(254, 10, 8, 1)
+  def stats: Stats = Stats(90, 35, 16, 7)
 
   def run(state: WorldState): Actions = {
     val targetSpeed = state.me.position.normal.widthLength(7)
     val targetForce = targetSpeed - state.me.speed
     val move =
-      if (state.me.heat < 48 && targetForce.length > 2) Actions.moveDirection(targetForce)
+      if (state.me.heat < 48 && targetForce.length > 3) Actions.moveDirection(targetForce)
       else Actions.empty
 
     val fire =
