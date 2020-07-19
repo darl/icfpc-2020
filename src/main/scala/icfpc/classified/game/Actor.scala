@@ -4,7 +4,8 @@ import icfpc.classified.game.Actor.Stats
 import icfpc.classified.syntax._
 
 case class Actor(
-    health: Int,
+    isDefender: Boolean,
+    shipId: Int,
     position: Vector,
     speed: Vector,
     stats: Stats,
@@ -24,16 +25,22 @@ case class Actor(
 
 object Actor {
 
-  case class Stats(supply: Int, might: Int, cooling: Int, z: Int)
+  case class Stats(supply: Int, might: Int, cooling: Int, z: Int) {
+
+    val asList: Expression = makeList(supply, might, cooling, z)
+  }
 
   def from(exception: Expression): Actor = {
     val actor = exception.toList
     val actorState = actor.head.toList
+    val role = actorState(0).toLiteral.value.toInt
+    val shipId = actorState(1).toLiteral.value.toInt
     val pos = actorState(2).toPair
     val speed = actorState(3).toPair
     val stats = actorState(4).toList
     Actor(
-      health = 100,
+      isDefender = role == 1,
+      shipId = shipId,
       position = Vector(
         x = pos._1.toLiteral.value.toInt,
         y = pos._2.toLiteral.value.toInt
