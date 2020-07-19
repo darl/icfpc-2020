@@ -53,6 +53,7 @@ object WordRenderer {
     val g = image.createGraphics()
     g.setFont(new Font("Monospaced", Font.PLAIN, 14))
     val halfShipSize = (2.5 * scale).toInt
+    val halfAddShipSize = 2 * scale
 
     //Background
     g.setColor(Color.BLACK)
@@ -105,7 +106,16 @@ object WordRenderer {
     drawActions(g, state.defender)
     drawTrajectory(g, state.defender)
 
+    // All other ships
+    g.setColor(Color.ORANGE)
+    g.setStroke(3)
+    state.adds.foreach { a =>
+      val aPos = a.position.toScreen
+      g.fillRect(aPos.x.toInt - halfAddShipSize, aPos.y.toInt - halfAddShipSize, halfAddShipSize * 2, halfAddShipSize * 2)
+    }
+
     //Me
+    g.setStroke(1)
     g.setColor(Color.GREEN)
     drawString(g, pprint.apply(command, 20).plainText, 20, 900)
     drawString(g, pprint.apply(state.debug, 20).plainText, 900, 900)
