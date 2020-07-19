@@ -2,7 +2,7 @@ package icfpc.classified.game
 
 import icfpc.classified.syntax._
 
-case class Actor(position: Vector, speed: Vector, health: Int)
+case class Actor(position: Vector, speed: Vector, supply: Int, health: Int)
 
 object Actor {
 
@@ -19,7 +19,8 @@ object Actor {
         speed._1.toLiteral.value.toInt,
         speed._2.toLiteral.value.toInt
       ),
-      health = actor.head.toList(4).toList.head.toLiteral.value.toInt
+      supply = actor.head.toList(4).toList.head.toLiteral.value.toInt,
+      health = 100
     )
   }
 }

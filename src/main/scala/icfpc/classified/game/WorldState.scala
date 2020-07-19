@@ -1,7 +1,6 @@
 package icfpc.classified.game
 
-import icfpc.classified._
-import WorldState._
+import icfpc.classified.game.WorldState._
 import icfpc.classified.replay.Capture
 import icfpc.classified.syntax.Expression
 
