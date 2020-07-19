@@ -18,8 +18,8 @@ object Default extends Strategy {
 
     val fire =
       if (state.me.heat <= 24) {
-        val my = state.me.trajectory.next(4)
-        val enemy = state.enemy.trajectory.next(4)
+        val my = state.me.trajectory.next(8)
+        val enemy = state.enemy.trajectory.next(8)
 
         val future = my.zip(enemy).zipWithIndex.map {
           case ((me, enemy), idx) => (me.position - enemy.position).length -> idx
