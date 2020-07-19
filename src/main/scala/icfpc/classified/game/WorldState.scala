@@ -4,8 +4,9 @@ import icfpc.classified._
 
 import WorldState._
 
-case class WorldState(status: Status, attacker: Actor, defender: Actor, me: Actor) {
-  def enemy: Actor = if (attacker == me) defender else attacker
+case class WorldState(status: Status, attacker: Actor, defender: Actor, isDefence: Boolean) {
+  def me: Actor = if (isDefence) defender else attacker
+  def enemy: Actor = if (isDefence) attacker else defender
 }
 
 object WorldState {
@@ -51,6 +52,6 @@ object WorldState {
       health = 100
     )
 
-    WorldState(status, attackerCompiled, defenderCompiled, if (isDefence) defenderCompiled else attackerCompiled)
+    WorldState(status, attackerCompiled, defenderCompiled, isDefence)
   }
 }
