@@ -23,7 +23,7 @@ object Player {
     val isDefence = state.toList(2).toList(1) == Literal(1)
 
     val strategy = Default
-    val stats = StatsBuilder.build(isDefence, strategy.stats)
+    val stats = StatsBuilder.build(isDefence, strategy.stats(isDefence))
     println(isDefence)
     println(stats)
     state = interactor.start(stats)

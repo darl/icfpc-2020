@@ -5,7 +5,7 @@ import icfpc.classified.game.{Actions, Vector, WorldState}
 
 object Hunter extends Strategy {
 
-  def stats: Stats = Stats(254, 10, 8, 1)
+  def stats(isDefence: Boolean): Stats = Stats(254, 10, 8, 1)
 
   def run(state: WorldState): Actions = {
     val targetSpeed = state.me.position.normal.widthLength(7)

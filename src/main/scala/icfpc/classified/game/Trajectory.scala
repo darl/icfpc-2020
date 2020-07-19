@@ -1,28 +1,38 @@
 package icfpc.classified.game
 
+import icfpc.classified.game.Trajectory.Position
+
 import scala.collection.mutable.ArrayBuffer
 
 class Trajectory(position: Vector, speed: Vector) {
 
-  case class State(position: Vector, speed: Vector) {
+  private val states = ArrayBuffer.empty[Position]
+  states.addOne(Position(position, speed))
 
-    def advance: State = {
-      val g = position.normalize.!
-      val newSpeed = speed + g
-      State(position + newSpeed, newSpeed)
-    }
-  }
-
-  private val states = ArrayBuffer.empty[State]
-  states.addOne(State(position, speed))
-
-  def afterStep(step: Int): State = {
-    while (step > states.size) {
-      states(step) = states(step - 1).advance
+  def afterStep(step: Int): Position = {
+    while (step > states.size - 1) {
+      states.addOne(states(step - 1).advance)
     }
     states(step)
   }
 
-  def next: State = afterStep(1)
+  def next: Position = afterStep(1)
 
+  def next(steps: Int): Iterator[Position] = {
+    Iterator.from(1).take(steps).map(afterStep)
+  }
+
+}
+
+object Trajectory {
+
+  case class Position(position: Vector, speed: Vector) {
+
+    def advance: Position = {
+      val g = position.normalize.!
+      // workaround antigravity hack
+      val newSpeed = if (speed.isZero) Vector.Zero else speed + g
+      Position(position + newSpeed, newSpeed)
+    }
+  }
 }
