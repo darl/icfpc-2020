@@ -11,7 +11,7 @@ object Hunter extends Strategy {
     val me = state.me
     val enemy = state.nearestEnemy
 
-    val distanceToEnemy = (state.me.position - state.enemy.position).length
+    val distanceToEnemy = (state.me.position - enemy.position).length
     if (state.me.trajectory.next(10).exists(_.isFatal) || distanceToEnemy < 30) return Default.run(state)
     val enemyPosition = enemy.trajectory.next(5).toSeq.last.position
     val target = enemyPosition - me.position

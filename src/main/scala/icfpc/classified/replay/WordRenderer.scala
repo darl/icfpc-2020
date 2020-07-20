@@ -65,53 +65,49 @@ object WordRenderer {
     val topLeft = Vector(-14, -14).toScreen
     g.drawRect(topLeft.x.toInt, topLeft.y.toInt, 28 * scale, 28 * scale)
 
-    //Attacker
-    g.setColor(Color.GREEN)
-    drawString(g, pprint.apply(state.attacker, 20).plainText.replace("Actor", "Attacker"), 1000, 20)
-    g.setStroke(3)
-    if (state.me == state.defender) g.setColor(Color.RED) else g.setColor(Color.GREEN)
-    val aPos = state.attacker.position.toScreen
-    g.drawLine(aPos.x.toInt, aPos.y.toInt - halfShipSize, aPos.x.toInt - halfShipSize, aPos.y.toInt + halfShipSize)
-    g.drawLine(
-      (aPos.x.toInt - halfShipSize),
-      aPos.y.toInt + halfShipSize,
-      aPos.x.toInt + halfShipSize,
-      aPos.y.toInt + halfShipSize
-    )
-    g.drawLine(aPos.x.toInt + halfShipSize, aPos.y.toInt + halfShipSize, aPos.x.toInt, aPos.y.toInt - halfShipSize)
-    val aSpeed = state.attacker.speed
-    if (aSpeed.nonZero) {
-      val newPos = (state.attacker.position + aSpeed).toScreen
-      g.setColor(Color.YELLOW)
-      g.setStroke(1)
-      g.drawLine(aPos.x.toInt, aPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
+    //Attackers
+    state.attackers.foreach { attacker =>
+      g.setColor(Color.GREEN)
+      drawString(g, pprint.apply(attacker, 20).plainText.replace("Actor", "Attacker"), 1000, 20)
+      g.setStroke(3)
+      if (state.isDefence) g.setColor(Color.RED) else g.setColor(Color.GREEN)
+      val aPos = attacker.position.toScreen
+      g.drawLine(aPos.x.toInt, aPos.y.toInt - halfShipSize, aPos.x.toInt - halfShipSize, aPos.y.toInt + halfShipSize)
+      g.drawLine(
+        (aPos.x.toInt - halfShipSize),
+        aPos.y.toInt + halfShipSize,
+        aPos.x.toInt + halfShipSize,
+        aPos.y.toInt + halfShipSize
+      )
+      g.drawLine(aPos.x.toInt + halfShipSize, aPos.y.toInt + halfShipSize, aPos.x.toInt, aPos.y.toInt - halfShipSize)
+      val aSpeed = attacker.speed
+      if (aSpeed.nonZero) {
+        val newPos = (attacker.position + aSpeed).toScreen
+        g.setColor(Color.YELLOW)
+        g.setStroke(1)
+        g.drawLine(aPos.x.toInt, aPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
+      }
+      drawActions(g, attacker)
+      drawTrajectory(g, attacker)
     }
-    drawActions(g, state.attacker)
-    drawTrajectory(g, state.attacker)
 
-    //Defender
-    g.setColor(Color.GREEN)
-    drawString(g, pprint.apply(state.defender, 20).plainText.replace("Actor", "Defender"), 20, 20)
-    g.setStroke(3)
-    if (!state.isDefence) g.setColor(Color.RED) else g.setColor(Color.GREEN)
-    val dPos = state.defender.position.toScreen
-    g.drawRect(dPos.x.toInt - halfShipSize, dPos.y.toInt - halfShipSize, halfShipSize * 2, halfShipSize * 2)
-    val dSpeed = state.defender.speed
-    if (dSpeed.nonZero) {
-      val newPos = (state.defender.position + dSpeed).toScreen
-      g.setColor(Color.YELLOW)
-      g.setStroke(1)
-      g.drawLine(dPos.x.toInt, dPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
-    }
-    drawActions(g, state.defender)
-    drawTrajectory(g, state.defender)
-
-    // All other ships
-    g.setColor(Color.ORANGE)
-    g.setStroke(3)
-    state.adds.foreach { a =>
-      val aPos = a.position.toScreen
-      g.fillRect(aPos.x.toInt - halfAddShipSize, aPos.y.toInt - halfAddShipSize, halfAddShipSize * 2, halfAddShipSize * 2)
+    //Defenders
+    state.defenders.foreach { defender =>
+      g.setColor(Color.GREEN)
+      drawString(g, pprint.apply(defender, 20).plainText.replace("Actor", "Defender"), 20, 20)
+      g.setStroke(3)
+      if (!state.isDefence) g.setColor(Color.RED) else g.setColor(Color.GREEN)
+      val dPos = defender.position.toScreen
+      g.drawRect(dPos.x.toInt - halfShipSize, dPos.y.toInt - halfShipSize, halfShipSize * 2, halfShipSize * 2)
+      val dSpeed = defender.speed
+      if (dSpeed.nonZero) {
+        val newPos = (defender.position + dSpeed).toScreen
+        g.setColor(Color.YELLOW)
+        g.setStroke(1)
+        g.drawLine(dPos.x.toInt, dPos.y.toInt, newPos.x.toInt, newPos.y.toInt)
+      }
+      drawActions(g, defender)
+      drawTrajectory(g, defender)
     }
 
     //Me
