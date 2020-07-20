@@ -20,8 +20,17 @@ case class Vector(x: Double, y: Double) {
     Vector((x * v / len), (y * v / len))
   }
 
-  def normal: Vector =
-    Vector(y, -x)
+  def normal(other: Vector): Vector = {
+    if (other.x != 0) {
+      val nx = other.x
+      val ny = (-x * nx) / y
+      Vector(nx, ny)
+    } else {
+      val ny = other.y
+      val nx = (-y * ny) / x
+      Vector(nx, ny)
+    }
+  }
 
   def normalize: Vector = widthLength(1)
 

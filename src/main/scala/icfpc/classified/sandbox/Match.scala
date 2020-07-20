@@ -8,7 +8,7 @@ import icfpc.classified.syntax.{pair, Demodulator, Expression, GalaxyOps, Intera
 object Match extends App {
   val address = "https://icfpc2020-api.testkontur.ru"
 
-  val (defenderId, attackerId) = requestGame()
+  val (attackerId, defenderId) = requestGame()
 
   val t1 = new Thread(() => {
     val states = Capture.mutable[Expression]

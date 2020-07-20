@@ -22,6 +22,7 @@ case class Actor(
 
   val canDrive: Boolean = heat + driveCost < 64
   val canFire: Boolean = heat + fireCost < 64
+
 }
 
 object Actor {
@@ -29,6 +30,7 @@ object Actor {
   case class Stats(supply: Int, might: Int, cooling: Int, z: Int) {
 
     val asList: Expression = makeList(supply, might, cooling, z)
+    def sum: Int = supply + might * 4 + cooling * 12 + z * 2
   }
 
   def from(exception: Expression): Actor = {

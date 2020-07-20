@@ -1,7 +1,7 @@
 package icfpc.classified.game.strategies
 
 import icfpc.classified.game.Actor.Stats
-import icfpc.classified.game.{Actions, Actor, WorldState}
+import icfpc.classified.game.{Actions, Actor, Vector, WorldState}
 
 object Default extends Strategy {
 
@@ -10,48 +10,8 @@ object Default extends Strategy {
   }
 
   def run(state: WorldState): Actions = {
-    val targetSpeed = state.me.position.normal.widthLength(7)
-    val targetForce = targetSpeed - state.me.speed
     val enemy = state.nearestEnemy
     val distanceToEnemy = (state.me.position - enemy.position).length
-
-    def nearEnemy = distanceToEnemy < 100 && enemy.canFire
-    val move =
-      if (state.me.canDrive && targetForce.length > 3 || state.me.trajectory.isFatalIn(16) || nearEnemy) {
-        Actions.moveDirection(targetForce)
-      } else Actions.empty
-
-    val perpDeviation = getFirePerpDeviation(state, enemy)
-    val fire = if (state.moveNumber > 1) {
-      if (state.me.canFire) {
-
-        def isNearestPosition: Boolean = {
-          val my = state.me.trajectory.next(8)
-          val enemyTrajectory = enemy.trajectory.next(8)
-
-          val future = my.zip(enemyTrajectory).zipWithIndex.map {
-            case ((me, enemy), idx) => (me.position - enemy.position).length -> idx
-          }
-
-          val min = future.toVector.sortBy(_._1)
-          min.take(2).exists(_._2 == 0)
-        }
-        if ((enemy.heat > 45 && distanceToEnemy < 100) || isNearestPosition || perpDeviation < 20) {
-          val fireDirection = enemy.trajectory.next.position
-          Actions.fire(fireDirection.round, state.me.maxFirePower)
-        } else {
-          Actions.empty
-        }
-      } else {
-        if (enemy.heat > 45 && distanceToEnemy < 50 || perpDeviation < 10) {
-          Actions.fire(enemy.trajectory.next.position, state.me.maxFirePower)
-        } else {
-          Actions.empty
-        }
-      }
-    } else {
-      Actions.empty
-    }
 
     val split =
       if (state.isDefence && state.moveNumber > 15) Actions.split(Stats(0, 0, 0, 1))
@@ -68,7 +28,55 @@ object Default extends Strategy {
       }
       .foldLeft(Actions.empty)(_ |+| _)
 
-    move |+| fire |+| split |+| addsActions
+    move(state, enemy) |+| fire(state, enemy) |+| split |+| addsActions
+  }
+
+  def move(state: WorldState, enemy: Actor): Actions = {
+    val distanceToEnemy = (state.me.position - enemy.position).length
+    val nearEnemy = distanceToEnemy < 100 && enemy.canFire
+    val conterClockwise = Vector(state.me.position.y, -state.me.position.x)
+    val rotation = if (state.me.speed.isZero) conterClockwise else state.me.speed
+    val targetSpeed = (state.me.position * -1).normal(rotation).widthLength(7)
+    val targetForce = targetSpeed - state.me.speed
+    if (state.me.canDrive && targetForce.length > 3 || state.me.trajectory.isFatalIn(16) || nearEnemy) {
+      Actions.moveDirection(targetForce)
+    } else Actions.empty
+  }
+
+  def fire(state: WorldState, enemy: Actor): Actions = {
+    if (state.moveNumber > 1) {
+      val perpDeviation = getFirePerpDeviation(state, enemy)
+      val distanceToEnemy = (state.me.position - enemy.position).length
+
+      if (state.me.canFire) {
+        def isNearestPosition: Boolean = {
+          val my = state.me.trajectory.next(8)
+          val enemyTrajectory = enemy.trajectory.next(8)
+
+          val future = my.zip(enemyTrajectory).zipWithIndex.map {
+            case ((me, enemy), idx) => (me.position - enemy.position).length -> idx
+          }
+
+          val min = future.toVector.sortBy(_._1)
+          min.take(2).exists(_._2 == 0)
+        }
+
+        if ((enemy.heat > 45 && distanceToEnemy < 100) || isNearestPosition || perpDeviation < 20) {
+          val fireDirection = enemy.trajectory.next.position
+          Actions.fire(fireDirection.round, state.me.maxFirePower)
+        } else {
+          Actions.empty
+        }
+      } else {
+        if (enemy.heat > 45 && distanceToEnemy < 50 || perpDeviation < 10) {
+          Actions.fire(enemy.trajectory.next.position, state.me.maxFirePower)
+        } else {
+          Actions.empty
+        }
+      }
+    } else {
+      Actions.empty
+    }
   }
 
   def getFirePerpDeviation(state: WorldState, enemy: Actor): Double = {

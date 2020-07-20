@@ -88,7 +88,7 @@ class WorldSpec extends AnyWordSpec with Matchers {
       )
 
       val world = WorldState.parse(start)
-      world.defender.position.x should be(22)
+      world.defenders.head.position.x should be(22)
     }
   }
 }
