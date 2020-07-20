@@ -34,6 +34,7 @@ case class WorldState(
     )
 
   def nearestEnemy: Actor = (enemy :: enemyAdds).minBy(e => (e.position - me.position).length)
+  def strongestEnemy: Actor = (enemy :: enemyAdds).maxBy(_.stats.sum)
 }
 
 object WorldState {
