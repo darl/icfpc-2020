@@ -1,7 +1,7 @@
 package icfpc.classified.game.strategies
 
 import icfpc.classified.game.Actor.Stats
-import icfpc.classified.game.{Actions, Actor, WorldState}
+import icfpc.classified.game.{Actions, Actor, Vector, WorldState}
 
 object Default extends Strategy {
 
@@ -10,7 +10,9 @@ object Default extends Strategy {
   }
 
   def run(state: WorldState): Actions = {
-    val targetSpeed = state.me.position.normal.widthLength(7)
+    val conterClockwise = Vector(-state.me.position.y, state.me.position.x)
+    val rotation = if (state.me.speed.isZero) conterClockwise else state.me.speed
+    val targetSpeed = (state.me.position * -1).normal(rotation).widthLength(7)
     val targetForce = targetSpeed - state.me.speed
     val enemy = state.nearestEnemy
     val distanceToEnemy = (state.me.position - enemy.position).length

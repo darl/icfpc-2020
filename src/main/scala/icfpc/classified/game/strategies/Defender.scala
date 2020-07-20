@@ -11,11 +11,11 @@ object Defender extends Strategy {
 
   override def run(state: WorldState): Actions = {
     val targetForce = if (flyingAway && math.abs(state.me.position.x) < 120 && math.abs(state.me.position.y) < 120) {
-      val targetSpeed = (state.me.position.normal.normalize * 1.2 + state.me.position.normalize).widthLength(7)
+      val targetSpeed = (state.me.position.defaultNormal * 1.2 + state.me.position.normalize).widthLength(7)
       targetSpeed - state.me.speed
     } else {
       flyingAway = false
-      val targetSpeed = state.me.position.normal.widthLength(7)
+      val targetSpeed = state.me.position.defaultNormal.widthLength(7)
       targetSpeed - state.me.speed
     }
 

@@ -66,8 +66,10 @@ object WordRenderer {
     g.drawRect(topLeft.x.toInt, topLeft.y.toInt, 28 * scale, 28 * scale)
 
     g.setColor(Color.GREEN)
+    g.setStroke(1)
     drawString(g, pprint.apply(state.attackers.head, 20).plainText.replace("Actor", "Attacker"), 1000, 20)
     drawString(g, pprint.apply(state.defenders.head, 20).plainText.replace("Actor", "Defender"), 20, 20)
+
     //Attackers
     state.attackers.foreach { attacker =>
       g.setStroke(3)
