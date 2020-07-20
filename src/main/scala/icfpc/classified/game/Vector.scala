@@ -20,6 +20,8 @@ case class Vector(x: Double, y: Double) {
     Vector((x * v / len), (y * v / len))
   }
 
+  def defaultNormal = Vector(y, -x)
+
   def normal(other: Vector): Vector = {
     if (other.x != 0) {
       val nx = other.x
