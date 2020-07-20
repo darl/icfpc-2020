@@ -1,7 +1,7 @@
 package icfpc.classified
 
 import icfpc.classified.game.WorldState.Started
-import icfpc.classified.game.strategies.Default
+import icfpc.classified.game.strategies.{Default, Hunter}
 import icfpc.classified.game.{Actions, Interactor, StatsBuilder, WorldState}
 import icfpc.classified.replay.Capture
 import icfpc.classified.syntax._
@@ -22,7 +22,7 @@ object Player {
 
     val isDefence = state.toList(2).toList(1) == Literal(1)
 
-    val strategy = Default
+    val strategy = if (isDefence) Default else Hunter
     val stats = StatsBuilder.build(isDefence, strategy.stats(isDefence))
     println(isDefence)
     println(stats)

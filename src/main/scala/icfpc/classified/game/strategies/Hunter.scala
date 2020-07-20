@@ -9,7 +9,7 @@ object Hunter extends Strategy {
 
   def run(state: WorldState): Actions = {
     val me = state.me
-    val enemy = (state.enemy :: state.enemyAdds).minBy(e => (e.position - me.position).length)
+    val enemy = state.nearestEnemy
 
     val distanceToEnemy = (state.me.position - state.enemy.position).length
     if (state.me.trajectory.next(10).exists(_.isFatal) || distanceToEnemy < 30) return Default.run(state)
@@ -20,14 +20,7 @@ object Hunter extends Strategy {
         Actions.moveDirection(target - state.me.speed * 2)
       else Actions.empty
 
-    val fire =
-      if (state.me.heat <= 32 && distanceToEnemy < 30) {
-        val g = state.enemy.position.normalize.!
-        val fireDirection = state.enemy.position + state.enemy.speed + g
-        Actions.fire(fireDirection.round, state.me.maxFirePower)
-      } else Actions.empty
-
-    move |+| fire
+    move
   }
 
 }
