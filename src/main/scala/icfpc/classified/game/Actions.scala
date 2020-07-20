@@ -6,13 +6,13 @@ import icfpc.classified.syntax._
 import icfpc.classified.syntax.Expression
 
 case class Actions(
-    drive: Option[Drive] = None,
-    fire: Option[Fire] = None,
-    detonate: Option[Detonate] = None,
-    split: Option[Split] = None) {
+    drive: List[Drive] = List.empty,
+    fire: List[Fire] = List.empty,
+    detonate: List[Detonate] = List.empty,
+    split: List[Split] = List.empty) {
 
   def |+|(other: Actions): Actions = {
-    Actions(other.drive.orElse(drive), other.fire.orElse(fire), other.detonate.orElse(detonate))
+    Actions(drive ::: other.drive, fire ::: other.fire, detonate ::: other.detonate, split ::: other.split)
   }
 
   override def toString: String =
@@ -45,19 +45,19 @@ case class Actions(
 }
 
 object Actions {
-  def empty: Actions = Actions(None, None, None)
+  def empty: Actions = Actions()
 
-  def fire(coordinates: Vector, power: Int): Actions = Actions(None, Some(Fire(coordinates, power)), None)
+  def fire(coordinates: Vector, power: Int): Actions = Actions(fire = List(Fire(coordinates, power)))
 
   def drive(direction: Vector): Actions = {
     val normX = direction.x.max(-1).min(1).toInt
     val normY = direction.y.max(-1).min(1).toInt
-    Actions(drive = Some(Drive(normX, normY)))
+    Actions(drive = List(Drive(normX, normY)))
   }
 
-  val detonate: Actions = Actions(detonate = Some(Detonate()))
+  val detonate: Actions = Actions(detonate = List(Detonate()))
 
-  def split(stats: Stats): Actions = Actions(split = Some(Split(stats)))
+  def split(stats: Stats): Actions = Actions(split = List(Split(stats)))
 
   def moveDirection(direction: Vector): Actions = {
     drive(direction * -1)

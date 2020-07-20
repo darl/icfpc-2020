@@ -3,7 +3,7 @@ package icfpc.classified.replay
 import java.awt.image.BufferedImage
 import java.awt.{BasicStroke, Color, Font, Graphics2D}
 
-import icfpc.classified.game.{Actions, Actor, Detonated, Drove, Fired, Vector, WorldState}
+import icfpc.classified.game.{Actions, Actor, Detonated, Drove, Fired, Splitted, Vector, WorldState}
 
 import scala.util.{Failure, Success, Try}
 
@@ -144,6 +144,7 @@ object WordRenderer {
         g.setColor(WHITE)
         g.setStroke(4)
         g.fillRoundRect(aPos.x.toInt - halfSize, aPos.y.toInt - halfSize, halfSize * 2, halfSize * 2, 10, 10)
+      case Splitted =>
     }
   }
 

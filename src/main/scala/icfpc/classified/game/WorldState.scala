@@ -15,13 +15,13 @@ case class WorldState(
   def me: Actor = if (isDefence) defender else attacker
   def enemy: Actor = if (isDefence) attacker else defender
 
-  def allMyShips: List[Actor] =
-    if (isDefence) defender :: adds.filter(_.isDefender)
-    else attacker :: adds.filterNot(_.isDefender)
+  def myAdds: List[Actor] =
+    if (isDefence) adds.filter(_.isDefender)
+    else adds.filterNot(_.isDefender)
 
-  def allEnemyShips: List[Actor] =
-    if (isDefence) attacker :: adds.filterNot(_.isDefender)
-    else defender :: adds.filter(_.isDefender)
+  def enemyAdds: List[Actor] =
+    if (isDefence) adds.filterNot(_.isDefender)
+    else adds.filter(_.isDefender)
 
   def center: Vector = Vector(0, 0)
 
@@ -55,10 +55,10 @@ object WorldState {
 
     val isDefence = settings(1).toLiteral.value.toInt == 1
 
-    val actors = state(2).toList
-    val defender = Actor.from(actors(0))
-    val attacker = Actor.from(actors(1))
-    val adds = actors.drop(2).map(Actor.from)
+    val actors = state(2).toList.map(Actor.from)
+    val defender = actors.filter(_.isDefender).head
+    val attacker = actors.filterNot(_.isDefender).head
+    val adds = actors.drop(2)
 
     val moveNumber = state.head.toLiteral.value.toInt
 
