@@ -43,7 +43,7 @@ object Trajectory {
     }
 
     def isFatal: Boolean = {
-      position.x.abs <= 20 && position.y.abs <= 20
+      (position.x.abs <= 20 && position.y.abs <= 20) || position.x.abs >= 130 || position.y.abs >= 130
     }
   }
 }

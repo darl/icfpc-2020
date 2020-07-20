@@ -36,7 +36,7 @@ object Default extends Strategy {
           val min = future.toVector.sortBy(_._1)
           min.take(2).exists(_._2 == 0)
         }
-        if ((enemy.heat > 45 && distanceToEnemy < 100) || isNearestPosition || perpDeviation < 20) {
+        if ((enemy.heat > 45 && distanceToEnemy < 100) || isNearestPosition || perpDeviation < 20 || distanceToEnemy < 15) {
           val fireDirection = enemy.trajectory.next.position
           Actions.fire(fireDirection.round, state.me.maxFirePower)
         } else {
