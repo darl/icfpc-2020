@@ -6,22 +6,24 @@ import icfpc.classified.syntax.Expression
 
 case class WorldState(
     status: Status,
-    attacker: Actor,
-    defender: Actor,
-    adds: List[Actor],
+    attackers: List[Actor],
+    defenders: List[Actor],
     isDefence: Boolean,
     moveNumber: Int,
     debug: Option[Any] = None) {
-  def me: Actor = if (isDefence) defender else attacker
-  def enemy: Actor = if (isDefence) attacker else defender
+  def me: Actor = if (isDefence) defenders.head else attackers.head
+
+  def nearestEnemy: Actor =
+    enemies.minBy(e => (e.position - me.position).length)
+
+  def strongestEnemy: Actor =
+    enemies.maxBy(_.stats.might)
+
+  def enemies: List[Actor] = if (isDefence) attackers else defenders
 
   def myAdds: List[Actor] =
-    if (isDefence) adds.filter(_.isDefender)
-    else adds.filterNot(_.isDefender)
-
-  def enemyAdds: List[Actor] =
-    if (isDefence) adds.filterNot(_.isDefender)
-    else adds.filter(_.isDefender)
+    if (isDefence) defenders.tail
+    else attackers.tail
 
   def center: Vector = Vector(0, 0)
 
@@ -32,9 +34,6 @@ case class WorldState(
       Vector(-14, -14),
       Vector(-14, 14)
     )
-
-  def nearestEnemy: Actor = (enemy :: enemyAdds).minBy(e => (e.position - me.position).length)
-  def strongestEnemy: Actor = (enemy :: enemyAdds).maxBy(_.stats.sum)
 }
 
 object WorldState {
@@ -59,13 +58,11 @@ object WorldState {
     val isDefence = settings(1).toLiteral.value.toInt == 1
 
     val actors = state(2).toList.map(Actor.from)
-    val defender = actors.filter(_.isDefender).head
-    val attacker = actors.filterNot(_.isDefender).head
-    val adds = actors.drop(2)
+    val defenders = actors.filter(_.isDefender)
+    val attackers = actors.filterNot(_.isDefender)
 
     val moveNumber = state.head.toLiteral.value.toInt
 
-    val debug = (attacker.position - defender.position).length
-    WorldState(status, attacker, defender, adds, isDefence, moveNumber, debug = Some(debug))
+    WorldState(status, attackers, defenders, isDefence, moveNumber, None)
   }
 }
