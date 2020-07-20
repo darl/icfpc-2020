@@ -32,6 +32,8 @@ case class WorldState(
       Vector(-14, -14),
       Vector(-14, 14)
     )
+
+  def nearestEnemy: Actor = (enemy :: enemyAdds).minBy(e => (e.position - me.position).length)
 }
 
 object WorldState {
