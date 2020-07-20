@@ -28,13 +28,9 @@ object Hunter extends Strategy {
     }
     val me = state.me
     val strongest = state.strongestEnemy
-    if (state.moveNumber < 10) {
-      if (state.moveNumber < 5 || (me.speed |*| strongest.speed) > 0) {
-        val targetSpeed = (state.me.position * -1).normal((strongest.speed * -1)).widthLength(7)
-        return Actions.moveDirection(targetSpeed)
-      } else {
-        return Default.move(state, strongest)
-      }
+    if (state.moveNumber < 6) {
+      val targetSpeed = (state.me.position * -1).normal((strongest.speed * -1)).widthLength(7)
+      return Actions.moveDirection(targetSpeed)
     }
 
     val enemy = selectEnemy(state)
