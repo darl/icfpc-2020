@@ -8,22 +8,20 @@ object Hunter extends Strategy {
   def stats(isDefender: Boolean): Stats = Stats(0, 30, 16, 1)
 
   def run(state: WorldState): Actions = {
-    val enemy = state.enemy.position
-    val me = state.me.position
-    val target = enemy - me
-    val td = target.normalize
-    val nx = Math.abs(td.x)
-    val ny = (-td.x * nx) / td.y
-    val normal = Vector(nx, ny).normalize
-    val factor = (5000 / me.length) * (1 - math.abs(normal |*| me.normalize))
-    val result = (target + (normal * factor)) - state.me.speed.map(x => x * x)
+    val me = state.me
+    val enemy = (state.enemy :: state.enemyAdds).minBy(e => (e.position - me.position).length)
+
+    val distanceToEnemy = (state.me.position - state.enemy.position).length
+    if (state.me.trajectory.next(10).exists(_.isFatal) || distanceToEnemy < 30) return Default.run(state)
+    val enemyPosition = enemy.trajectory.next(5).toSeq.last.position
+    val target = enemyPosition - me.position
     val move =
-      if (state.me.heat < 48 && result.length > 1)
-        Actions.moveDirection(result)
+      if (state.me.heat < 48 && target.length > 1)
+        Actions.moveDirection(target - state.me.speed * 2)
       else Actions.empty
 
     val fire =
-      if (state.me.heat <= 32 && (state.me.position - state.enemy.position).length < 30) {
+      if (state.me.heat <= 32 && distanceToEnemy < 30) {
         val g = state.enemy.position.normalize.!
         val fireDirection = state.enemy.position + state.enemy.speed + g
         Actions.fire(fireDirection.round, state.me.maxFirePower)
